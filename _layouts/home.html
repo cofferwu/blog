@@ -11,7 +11,7 @@
   <a class="brand" href="{{ '/index.html' | relative_url }}">技术博客<span class="dot">.</span></a>
   <nav><a href="{{ '/index.html' | relative_url }}">首页</a><a href="https://github.com/cofferwu/blog" target="_blank">GitHub</a></nav>
 </div></header>
-{% assign docs = site.pages | where_exp: "p", "p.date and p.title" | sort: "date" | reverse %}
+{% assign docs = site.pages | where_exp: "p", "p.title" | where_exp: "p", "p.date" | sort: "date" | reverse %}
 {% assign cats = "" | split: "|" %}
 {% for p in docs %}
   {% assign c = p.categories.first %}
