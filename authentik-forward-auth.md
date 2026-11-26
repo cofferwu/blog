@@ -1,12 +1,14 @@
 ---
 title: "Authentik Forward Auth 反向代理认证"
 date: 2026-11-04 02:54:06 +00:00
-categories: 身份与认证
-tags: ["Authentik", "Nginx", "Forward Auth", "反向代理"]
+categories:
+  - 身份与认证
+tags:
+  - Authentik
+  - Nginx
+  - Forward Auth
+  - 反向代理
 ---
-
-<p class="back-index"><a href="index.html">← 返回文章索引</a></p>
-
 
 ## 概述
 
@@ -182,6 +184,12 @@ curl.exe -v -k -b "authentik_proxy_0d98d05c=..." https://app.zjtdemo.cloud/test.
 | 502 upstream sent too big header | 身份头过大，调大 `proxy_buffer_size` |
 | `duplicate map` 报错 | map 定义被重复写进多个 vhost，应抽到 `conf.d` 共享 |
 | 后端收不到身份头 | Provider 未加入 Outpost 的 Applications 列表 |
+
+## 演示视频
+
+<video controls preload="metadata" style="width:100%;border-radius:10px;border:1px solid #e6e8eb;" src="attachments/authentik-singleapp.mp4"></video>
+
+*单应用 Forward Auth 登录流程演示*
 
 ---
 

@@ -1,12 +1,14 @@
 ---
 title: "宁盾与 NetScaler SAML SSO 对接"
 date: 2026-10-16 05:51:37 +00:00
-categories: 身份与认证
-tags: ["宁盾", "NetScaler", "SAML", "SSO"]
+categories:
+  - 身份与认证
+tags:
+  - 宁盾
+  - NetScaler
+  - SAML
+  - SSO
 ---
-
-<p class="back-index"><a href="index.html">← 返回文章索引</a></p>
-
 
 ## 概述
 
@@ -110,6 +112,16 @@ add authentication samlAction saml_action_polarsight \
 | 重定向到错误地址 | `samlRedirectUrl` 与 metadata 中的 SSO URL 是否一致 |
 | 用户名映射为空 | `samlUserField` 与宁盾返回的 Assertion 属性是否匹配 |
 | 单点登出无效 | `logoutURL` 是否正确，宁盾侧是否配置登出回调 |
+
+## 演示视频
+
+<video controls preload="metadata" style="width:100%;border-radius:10px;border:1px solid #e6e8eb;" src="attachments/ndsso-demo.mp4"></video>
+
+*宁盾 + NetScaler SAML 单点登录流程演示*
+
+<video controls preload="metadata" style="width:100%;border-radius:10px;border:1px solid #e6e8eb;" src="attachments/wecom-login-demo.mp4"></video>
+
+*企业微信扫码登录流程演示*
 
 ---
 

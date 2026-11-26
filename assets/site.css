@@ -121,6 +121,13 @@ a:hover { text-decoration: underline; }
   max-width: 100%; border: 1px solid var(--border); border-radius: 10px;
   margin: 12px 0; cursor: zoom-in;
 }
+.post video {
+  display: block; max-width: 100%; margin: 16px 0;
+  background: #000; box-shadow: var(--shadow);
+}
+.post figcaption, .post em:has(video) {
+  font-size: 13px; color: var(--muted); text-align: center;
+}
 .post table {
   border-collapse: collapse; width: 100%; margin: 16px 0; font-size: 14.5px;
   display: block; overflow-x: auto;

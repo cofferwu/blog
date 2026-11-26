@@ -1,12 +1,13 @@
 ---
 title: "Authentik 企业微信登录"
 date: 2026-11-10 06:18:22 +00:00
-categories: 身份与认证
-tags: ["Authentik", "企业微信", "OAuth"]
+categories:
+  - 身份与认证
+tags:
+  - Authentik
+  - 企业微信
+  - OAuth
 ---
-
-<p class="back-index"><a href="index.html">← 返回文章索引</a></p>
-
 
 ## 概述
 
@@ -89,6 +90,10 @@ curl -s "https://qyapi.weixin.qq.com/cgi-bin/user/get?access_token=$TOKEN&userid
 - 回调域名是否已加入企业微信应用的可信域名列表。
 - Source 是否已加入 `default-authentication-identification` 的 Selected Sources。
 - 属性映射是否已挂载，且用户邮箱不为空——邮箱为空会导致后续基于 email 的账号关联失败。
+
+## 附件下载
+
+- [wecom.zip](attachments/wecom.zip) — 本文配套部署包，含企业微信集成脚本（wecom.py、apps.py、deploy.sh、diagnose_wecom.py 等）
 
 ---
 

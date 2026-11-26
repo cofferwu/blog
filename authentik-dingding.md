@@ -1,12 +1,13 @@
 ---
 title: "Authentik 接入钉钉"
 date: 2026-11-11 08:46:15 +00:00
-categories: 身份与认证
-tags: ["Authentik", "钉钉", "OAuth"]
+categories:
+  - 身份与认证
+tags:
+  - Authentik
+  - 钉钉
+  - OAuth
 ---
-
-<p class="back-index"><a href="index.html">← 返回文章索引</a></p>
-
 
 ## 概述
 
@@ -62,6 +63,10 @@ Flows and Stages → Flows → default-authentication-flow
 - 点击钉钉登录，确认跳转到钉钉授权页并正常回跳。
 - 若回跳时报 `redirect_uri mismatch`，检查钉钉侧重定向 URL 与 authentik 回调地址是否**逐字符一致**（含协议、端口、结尾斜杠）。
 - 若提示应用无权限，检查钉钉应用是否已发布/启用，且授权范围包含获取用户基本信息。
+
+## 附件下载
+
+- [wemcomdingding.zip](attachments/wemcomdingding.zip) — 本文配套部署包，含钉钉/企业微信集成脚本（dingtalk.py、wecom.py、deploy.sh、diagnose_dingtalk.py 等）
 
 ---
 
