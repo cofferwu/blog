@@ -3,7 +3,7 @@ description: Authentik SSO、宁盾、Citrix 等技术实践笔记
 author: cofferwu
 lang: zh-CN
 
-theme: minima
+theme: jekyll-theme-cayman
 markdown: kramdown
 kramdown:
   input: GFM
