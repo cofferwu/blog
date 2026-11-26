@@ -48,7 +48,7 @@
   {% endif %}
   <article class="card" data-cat="{{ c | escape }}">
     <div class="meta"><span class="badge">{{ c | escape }}</span><time>{{ p.date | date: "%Y-%m-%d" }}</time></div>
-    <h3><a href="{{ p.url }}">{{ p.title | escape }}</a></h3>
+    <h3><a href="{{ p.url | relative_url }}">{{ p.title | escape }}</a></h3>
     <p class="excerpt">{{ ex | escape }}</p>
     <div class="tags">{% for t in p.tags limit: 5 %}<span>{{ t | escape }}</span>{% endfor %}</div>
   </article>
