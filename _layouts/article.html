@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>{{ page.title | escape }} · 技术博客</title>
+<link rel="stylesheet" href="{{ '/assets/site.css' | relative_url }}">
+</head>
+<body>
+<header class="site-header"><div class="wrap">
+  <a class="brand" href="{{ '/index.html' | relative_url }}">技术博客<span class="dot">.</span></a>
+  <nav><a href="{{ '/index.html' | relative_url }}">首页</a><a href="https://github.com/cofferwu/blog" target="_blank">GitHub</a></nav>
+</div></header>
+{% assign cat = page.categories.first | default: '未分类' %}
+<div class="article-wrap"><div class="article-layout">
+  <div>
+    <p class="crumb"><a href="{{ '/index.html' | relative_url }}">首页</a> / <span class="badge">{{ cat }}</span></p>
+    <h1 class="article-title">{{ page.title | escape }}</h1>
+    <div class="article-meta"><time>{{ page.date | date: "%Y-%m-%d" }}</time><span>·</span><span>{{ cat }}</span></div>
+    <div class="article-tags">{% for t in page.tags %}<span>{{ t | escape }}</span>{% endfor %}</div>
+    <article class="post">
+{{ content }}
+    </article>
+    {% assign docs = site.pages | where_exp: "p", "p.date and p.title" | sort: "date" | reverse %}
+    {% assign prev = nil %}
+    {% assign next = nil %}
+    {% assign isnext = false %}
+    {% for p in docs %}
+      {% if isnext %}
+        {% assign next = p %}
+        {% break %}
+      {% endif %}
+      {% if p.url == page.url %}
+        {% assign isnext = true %}
+        {% continue %}
+      {% endif %}
+      {% assign prev = p %}
+    {% endfor %}
+    <div class="pager">
+      {% if prev %}<a class="prev" href="{{ prev.url }}"><span class="dir">← 上一篇</span>{{ prev.title | escape }}</a>{% else %}<a class="prev"></a>{% endif %}
+      {% if next %}<a class="next" href="{{ next.url }}"><span class="dir">下一篇 →</span>{{ next.title | escape }}</a>{% else %}<a class="next"></a>{% endif %}
+    </div>
+    <p class="article-footer">本文由 WorkBuddy AI 编辑整理 · <a href="{{ '/index.html' | relative_url }}">返回索引</a></p>
+  </div>
+  <aside class="toc"><div class="toc-title">目录</div><ul class="toc-list"></ul></aside>
+</div></div>
+<footer class="site-footer"><div class="wrap">
+  <span>© 2026 cofferwu · 个人技术笔记</span>
+  <span>由 OneNote 笔记整理 · WorkBuddy AI 编辑优化</span>
+</div></footer>
+<script src="{{ '/assets/site.js' | relative_url }}"></script>
+</body>
+</html>

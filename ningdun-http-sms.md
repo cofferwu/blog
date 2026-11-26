@@ -1,12 +1,16 @@
 ---
 title: "宁盾 HTTP 短信通道配置"
 date: 2026-07-06 03:55:42 +00:00
-categories: 身份与认证
-tags: ["宁盾", "短信", "HTTP", "Rocky Linux"]
+categories:
+  - 身份与认证
+tags:
+  - 宁盾
+  - 短信
+  - HTTP
+  - Rocky Linux
+layout: article
+sum: "宁盾可通过 HTTP 接口对接外部短信网关。本文在 Rocky Linux 上用 Flask 搭建一个轻量级的短信接收服务：无论宁盾以 JSON POST、表单 POST 还是 GET 参数方式调用，都能统一接收并记录请…"
 ---
-
-<p class="back-index"><a href="index.html">← 返回文章索引</a></p>
-
 
 ## 概述
 

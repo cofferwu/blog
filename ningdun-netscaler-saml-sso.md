@@ -8,6 +8,8 @@ tags:
   - NetScaler
   - SAML
   - SSO
+layout: article
+sum: "本文记录以宁盾作为 SAML IdP、Citrix NetScaler（ADC）作为 SP 的 SSO 对接过程。重点是从宁盾自动生成的 IdP metadata 中提取并正确导入证书与各项 URL，避免在 NetSca…"
 ---
 
 ## 概述

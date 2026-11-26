@@ -1,0 +1,24 @@
+title: 技术博客
+name: cofferwu · 技术博客
+baseurl: /blog
+url: https://cofferwu.github.io
+
+markdown: kramdown
+highlighter: rouge
+
+kramdown:
+  auto_ids: true
+  input: GFM
+  syntax_highlighter_opts:
+    css_class: codehilite
+    guess_lang: false
+
+defaults:
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: article
+
+exclude:
+  - README.md

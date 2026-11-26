@@ -1,12 +1,16 @@
 ---
 title: "Authentik LDAP outpost"
 date: 2026-10-28 02:32:47 +00:00
-categories: 身份与认证
-tags: ["Authentik", "LDAP", "Outpost", "Docker"]
+categories:
+  - 身份与认证
+tags:
+  - Authentik
+  - LDAP
+  - Outpost
+  - Docker
+layout: article
+sum: "Authentik 的 LDAP outpost 可以把 Web 侧的用户目录以标准 LDAP / LDAPS 协议暴露给 Linux 主机，让 sssd 等传统 PAM 组件复用同一套账号体系。本文记录从服务账号、认证…"
 ---
-
-<p class="back-index"><a href="index.html">← 返回文章索引</a></p>
-
 
 ## 概述
 

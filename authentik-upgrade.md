@@ -1,12 +1,16 @@
 ---
 title: "Authentik 升级与备份"
 date: 2026-11-04 04:07:59 +00:00
-categories: 身份与认证
-tags: ["Authentik", "Docker", "备份", "升级"]
+categories:
+  - 身份与认证
+tags:
+  - Authentik
+  - Docker
+  - 备份
+  - 升级
+layout: article
+sum: "authentik 升级前必须先备份数据库与配置，因为升级会带来不可逆的数据库 schema 迁移，且官方**不支持降级**。本文记录一次从旧版本升级到 2026.8.5 的完整流程，包括备份、升级、outpost 重建…"
 ---
-
-<p class="back-index"><a href="index.html">← 返回文章索引</a></p>
-
 
 ## 概述
 

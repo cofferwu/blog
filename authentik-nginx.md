@@ -1,12 +1,16 @@
 ---
 title: "Authentik + Nginx 流量架构"
 date: 2026-11-04 02:51:11 +00:00
-categories: 身份与认证
-tags: ["Authentik", "Nginx", "HTTPS", "LDAP"]
+categories:
+  - 身份与认证
+tags:
+  - Authentik
+  - Nginx
+  - HTTPS
+  - LDAP
+layout: article
+sum: "本文梳理 authentik 部署中各类流量的走向：HTTPS 认证流量、应用流量、auth_request 鉴权子请求、LDAP 流量以及 Docker 内网回连。明确端口与暴露范围后，才能正确配置 Nginx、com…"
 ---
-
-<p class="back-index"><a href="index.html">← 返回文章索引</a></p>
-
 
 ## 概述
 

@@ -1,13 +1,16 @@
 ---
 title: "Authentik 邮箱双因素认证"
 date: 2026-10-26 05:18:44 +00:00
-categories: 身份与认证
-tags: ["Authentik", "2FA", "SMTP", "邮箱"]
+categories:
+  - 身份与认证
+tags:
+  - Authentik
+  - 2FA
+  - SMTP
+  - 邮箱
+layout: article
+sum: "本文记录为 authentik 配置邮箱验证码作为第二因素（Email MFA）的完整流程：SMTP 配置 → 创建邮件验证器 Stage → 在 MFA 验证阶段启用 Email → 绑定认证流 → 自定义邮件模板 →…"
 ---
-
-<p class="back-index"><a href="index.html">← 返回文章索引</a></p>
-
-{% raw %}
 
 ## 概述
 
@@ -173,4 +176,3 @@ docker compose up -d --force-recreate server worker
 ---
 
 > 本文由 WorkBuddy AI 编辑整理。
-{% endraw %}

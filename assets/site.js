@@ -1,3 +1,18 @@
+// 构建文章目录（Jekyll 渲染，目录由前端生成）
+var tocList = document.querySelector('.toc .toc-list');
+if (tocList) {
+  var heads = Array.prototype.slice.call(document.querySelectorAll('.post h2[id]'));
+  if (!heads.length) {
+    var t = document.querySelector('.toc');
+    if (t) t.style.display = 'none';
+  } else {
+    var html = '';
+    heads.forEach(function (h) {
+      html += '<li><a href="#' + h.id + '">' + h.textContent + '</a></li>';
+    });
+    tocList.innerHTML = html;
+  }
+}
 // 分类筛选
 document.querySelectorAll('.chip').forEach(function (c) {
   c.addEventListener('click', function () {
@@ -10,17 +25,18 @@ document.querySelectorAll('.chip').forEach(function (c) {
   });
 });
 // 代码复制
-document.querySelectorAll('.codehilite').forEach(function (block) {
+document.querySelectorAll('.post pre').forEach(function (pre) {
+  var wrap = pre.closest('.codehilite, .highlighter-rouge, .highlight') || pre.parentElement;
+  if (!wrap) return;
   var btn = document.createElement('button');
   btn.className = 'copy-btn'; btn.textContent = '复制';
   btn.addEventListener('click', function () {
-    var code = block.querySelector('pre');
-    navigator.clipboard.writeText(code.innerText).then(function () {
+    navigator.clipboard.writeText(pre.innerText).then(function () {
       btn.textContent = '已复制';
       setTimeout(function () { btn.textContent = '复制'; }, 1500);
     });
   });
-  block.appendChild(btn);
+  wrap.appendChild(btn);
 });
 // 图片灯箱
 var lb = document.createElement('div');
@@ -36,7 +52,7 @@ document.querySelectorAll('.post img').forEach(function (img) {
 // 目录高亮
 var tocLinks = document.querySelectorAll('.toc a');
 if (tocLinks.length && 'IntersectionObserver' in window) {
-  var heads = document.querySelectorAll('.post h2[id]');
+  var heads2 = document.querySelectorAll('.post h2[id]');
   var io = new IntersectionObserver(function (es) {
     es.forEach(function (e) {
       if (e.isIntersecting) {
@@ -44,7 +60,7 @@ if (tocLinks.length && 'IntersectionObserver' in window) {
       }
     });
   }, { rootMargin: '0px 0px -70% 0px' });
-  heads.forEach(function (h) { io.observe(h); });
+  heads2.forEach(function (h) { io.observe(h); });
 }
 // 回到顶部
 var top = document.createElement('button');

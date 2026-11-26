@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>技术博客 · Authentik / 宁盾 / Citrix 技术实践</title>
+<link rel="stylesheet" href="{{ '/assets/site.css' | relative_url }}">
+</head>
+<body>
+<header class="site-header"><div class="wrap">
+  <a class="brand" href="{{ '/index.html' | relative_url }}">技术博客<span class="dot">.</span></a>
+  <nav><a href="{{ '/index.html' | relative_url }}">首页</a><a href="https://github.com/cofferwu/blog" target="_blank">GitHub</a></nav>
+</div></header>
+{% assign docs = site.pages | where_exp: "p", "p.date and p.title" | sort: "date" | reverse %}
+{% assign cats = "" | split: "|" %}
+{% for p in docs %}
+  {% assign c = p.categories.first %}
+  {% if c and c != "" %}
+    {% unless cats contains c %}
+      {% assign cats = cats | push: c %}
+    {% endunless %}
+  {% endif %}
+{% endfor %}
+<section class="hero"><div class="wrap">
+  <h1>技术<span class="grad">实践</span>笔记</h1>
+  <p class="sub">Authentik SSO、宁盾、Citrix 等企业级身份认证与桌面虚拟化的实战记录</p>
+  <div class="stats">
+    <span class="stat"><b>{{ docs.size }}</b>篇文章</span>
+    <span class="stat"><b>{{ cats.size }}</b>个分类</span>
+    <span class="stat"><b>51</b>张配图</span>
+    <span class="stat">持续更新</span>
+  </div>
+</div></section>
+<div class="filterbar">
+  <span class="chip on" data-cat="all">全部 ({{ docs.size }})</span>
+  {% for c in cats %}
+    {% assign cnt = 0 %}
+    {% for p in docs %}{% if p.categories.first == c %}{% assign cnt = cnt | plus: 1 %}{% endif %}{% endfor %}
+    <span class="chip" data-cat="{{ c | escape }}">{{ c | escape }} ({{ cnt }})</span>
+  {% endfor %}
+</div>
+<section class="grid">
+{% for p in docs %}
+  {% assign c = p.categories.first | default: '未分类' %}
+  {% assign ex = p.sum %}
+  {% if ex == blank %}
+    {% assign ex = p.content | strip_html | strip | truncate: 110 %}
+  {% endif %}
+  <article class="card" data-cat="{{ c | escape }}">
+    <div class="meta"><span class="badge">{{ c | escape }}</span><time>{{ p.date | date: "%Y-%m-%d" }}</time></div>
+    <h3><a href="{{ p.url }}">{{ p.title | escape }}</a></h3>
+    <p class="excerpt">{{ ex | escape }}</p>
+    <div class="tags">{% for t in p.tags limit: 5 %}<span>{{ t | escape }}</span>{% endfor %}</div>
+  </article>
+{% endfor %}
+</section>
+<footer class="site-footer"><div class="wrap">
+  <span>© 2026 cofferwu · 个人技术笔记</span>
+  <span>由 OneNote 笔记整理 · WorkBuddy AI 编辑优化</span>
+</div></footer>
+<script src="{{ '/assets/site.js' | relative_url }}"></script>
+</body>
+</html>

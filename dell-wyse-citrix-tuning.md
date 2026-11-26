@@ -1,12 +1,16 @@
 ---
 title: "Dell Wyse 瘦客户端 Citrix 优化"
 date: 2021-12-02 04:06:38 +00:00
-categories: 桌面虚拟化
-tags: ["Citrix", "Wyse", "瘦客户端", "注册表"]
+categories:
+  - 桌面虚拟化
+tags:
+  - Citrix
+  - Wyse
+  - 瘦客户端
+  - 注册表
+layout: article
+sum: "Dell Wyse 瘦客户端在使用 Citrix Receiver / Desktop Viewer 时，默认会弹出商店配置框、加载项提示、锁定桌面等，影响自助终端或公用桌面的使用体验。本文用一组批处理命令做统一优化，并…"
 ---
-
-<p class="back-index"><a href="index.html">← 返回文章索引</a></p>
-
 
 ## 概述
 

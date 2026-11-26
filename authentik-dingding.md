@@ -7,6 +7,8 @@ tags:
   - Authentik
   - 钉钉
   - OAuth
+layout: article
+sum: "为 Authentik 添加钉钉作为第三方登录源（OAuth Source），用户可直接使用钉钉扫码/账号登录。由于钉钉开放平台已提供标准的 OAuth 应用模板，整个过程通过 Web 向导即可完成，只需填写应用的 Ap…"
 ---
 
 ## 概述

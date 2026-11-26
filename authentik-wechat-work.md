@@ -7,6 +7,8 @@ tags:
   - Authentik
   - 企业微信
   - OAuth
+layout: article
+sum: "为 Authentik 添加企业微信作为登录源，并解决一个关键问题：企业微信通讯录 API 只能拿到 `userid`，用户的邮箱字段需要在用户完成 OAuth 授权后才能获取。本文记录 Source 配置、属性映射脚本…"
 ---
 
 ## 概述

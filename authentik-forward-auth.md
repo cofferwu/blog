@@ -8,6 +8,8 @@ tags:
   - Nginx
   - Forward Auth
   - 反向代理
+layout: article
+sum: "本文记录用 Nginx 的 `auth_request` 模块对接 authentik outpost，为单个后端应用（示例为 IIS 站点 `app.zjtdemo.cloud`）做 Forward Auth 前置认证…"
 ---
 
 ## 概述

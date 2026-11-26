@@ -1,12 +1,15 @@
 ---
 title: "Authentik 自定义页脚品牌"
 date: 2026-10-26 02:44:59 +00:00
-categories: 身份与认证
-tags: ["Authentik", "CSS", "品牌定制"]
+categories:
+  - 身份与认证
+tags:
+  - Authentik
+  - CSS
+  - 品牌定制
+layout: article
+sum: "authentik 登录页底部默认会显示一组站点链接（Help、Terms 等）。如果这些链接对内部系统没有意义，可以通过创建 Brand（品牌）并注入自定义 CSS，把它们替换成一行版权/系统说明文字。"
 ---
-
-<p class="back-index"><a href="index.html">← 返回文章索引</a></p>
-
 
 ## 概述
 

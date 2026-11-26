@@ -1,12 +1,16 @@
 ---
 title: "Authentik 飞书 SSO 配置"
 date: 2026-10-26 02:12:58 +00:00
-categories: 身份与认证
-tags: ["Authentik", "飞书", "SSO", "OAuth"]
+categories:
+  - 身份与认证
+tags:
+  - Authentik
+  - 飞书
+  - SSO
+  - OAuth
+layout: article
+sum: "本文记录用 authentik 对接飞书实现 SSO 登录的配置。飞书不提供标准的 OIDC discovery 端点，需要用 OAuth（Generic）方式手工填写授权、令牌与用户信息 URL，并注意 scopes …"
 ---
-
-<p class="back-index"><a href="index.html">← 返回文章索引</a></p>
-
 
 ## 概述
 
