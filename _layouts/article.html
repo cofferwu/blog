@@ -37,8 +37,8 @@
       {% assign prev = p %}
     {% endfor %}
     <div class="pager">
-      {% if prev %}<a class="prev" href="{{ prev.url }}"><span class="dir">← 上一篇</span>{{ prev.title | escape }}</a>{% else %}<a class="prev"></a>{% endif %}
-      {% if next %}<a class="next" href="{{ next.url }}"><span class="dir">下一篇 →</span>{{ next.title | escape }}</a>{% else %}<a class="next"></a>{% endif %}
+      {% if prev %}<a class="prev" href="{{ prev.url | relative_url }}"><span class="dir">← 上一篇</span>{{ prev.title | escape }}</a>{% else %}<a class="prev"></a>{% endif %}
+      {% if next %}<a class="next" href="{{ next.url | relative_url }}"><span class="dir">下一篇 →</span>{{ next.title | escape }}</a>{% else %}<a class="next"></a>{% endif %}
     </div>
     <p class="article-footer">本文由 WorkBuddy AI 编辑整理 · <a href="{{ '/index.html' | relative_url }}">返回索引</a></p>
   </div>
