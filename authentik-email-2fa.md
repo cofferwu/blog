@@ -31,7 +31,6 @@ AUTHENTIK_EMAIL__USERNAME=jt.zhu@[邮箱后缀已隐藏]
 AUTHENTIK_EMAIL__PASSWORD=
 AUTHENTIK_EMAIL__FROM=jt.zhu@[邮箱后缀已隐藏]
 AUTHENTIK_EMAIL__TIMEOUT=10
-```
 
 > 说明：邮箱配置是以WPS邮箱为例，且邮箱后缀（域名部分）已做脱敏处理，实际部署时请替换为对应的邮箱SMTP属性。
 
@@ -39,14 +38,12 @@ AUTHENTIK_EMAIL__TIMEOUT=10
 
 ```bash
 docker compose run --rm worker ak test_email jt.zhu@[邮箱后缀已隐藏]
-```
 
 或进入 worker 容器后在内部执行：
 
 ```bash
 docker compose exec worker /bin/bash
 ak test_email jt.zhu@[邮箱后缀已隐藏]
-```
 
 > SSL 与 TLS 不要同时开启：465 用 `USE_SSL=true` / `USE_TLS=false`；587 则相反。
 
@@ -121,11 +118,11 @@ cd ~/.docker/compose/authentik/custom-templates
 sudo mkdir email
 cd email
 sudo vi email_otp.html
-```
 
 `email_otp.html` 示例：
 
 
+{% raw %}
 ```django
 {% load i18n %}
 <!DOCTYPE html>
@@ -150,11 +147,12 @@ sudo vi email_otp.html
 </div>
 </body>
 </html>
-```
+{% endraw %}
 
 
 如需修改纯文本预览内容，编辑 `email_otp.txt`：
 
+{% raw %}
 ```django
 {% load i18n %}{% load humanize %}{% autoescape off %}{% blocktrans with username=user.username %}您好 {{ username }}，这是您的登录验证码。{% endblocktrans %}
 {{ token }}
@@ -164,14 +162,13 @@ sudo vi email_otp.html
 --
 authentik
 {% endautoescape %}
-```
+{% endraw %}
 
 
 配置完成后重建容器使模板生效：
 
 ```bash
 docker compose up -d --force-recreate server worker
-```
 
 ![](images/Authentik-邮箱双因素认证-005.png)
 
