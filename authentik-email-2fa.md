@@ -125,6 +125,7 @@ sudo vi email_otp.html
 
 `email_otp.html` 示例：
 
+{% raw %}
 ```django
 {% load i18n %}
 <style>
@@ -141,9 +142,11 @@ sudo vi email_otp.html
   <p class="muted">如果这不是您本人的操作，请忽略此邮件，并考虑修改密码。</p>
 </div>
 ```
+{% endraw %}
 
 如需修改纯文本预览内容，编辑 `email_otp.txt`：
 
+{% raw %}
 ```django
 {% load i18n %}{% load humanize %}{% autoescape off %}
 {% blocktrans with username=user.username %}您好 {{ username }}，这是您的登录验证码。{% endblocktrans %}
@@ -152,6 +155,7 @@ sudo vi email_otp.html
 -- authentik
 {% endautoescape %}
 ```
+{% endraw %}
 
 配置完成后重建容器使模板生效：
 
