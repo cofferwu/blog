@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Authentik 升级与备份 · 技术博客</title>
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<header class="site-header"><div class="wrap">
+  <a class="brand" href="index.html">技术博客<span class="dot">.</span></a>
+  <nav><a href="index.html">首页</a><a href="https://github.com/cofferwu/blog" target="_blank">GitHub</a></nav>
+</div></header>
+<div class="article-wrap"><div class="article-layout">
+  <div>
+    <p class="crumb"><a href="index.html">首页</a> / <span class="badge">身份与认证</span></p>
+    <h1 class="article-title">Authentik 升级与备份</h1>
+    <div class="article-meta"><time>2026-11-04</time><span>·</span><span>身份与认证</span></div>
+    <div class="article-tags"><span>Authentik</span><span>Docker</span><span>备份</span><span>升级</span></div>
+    <article class="post">
+<h2 id="概述">概述</h2>
+<p>authentik 升级前必须先备份数据库与配置，因为升级会带来不可逆的数据库 schema 迁移，且官方<strong>不支持降级</strong>。本文记录一次从旧版本升级到 2026.8.5 的完整流程，包括备份、升级、outpost 重建，以及异常时的回滚步骤。</p>
+<h2 id="一-升级前备份">一、升级前备份</h2>
+<p>进入 compose 目录：</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/.docker/compose/authentik
+</code></pre></div>
+
+<p>导出数据库（service 名是 <code>postgresql</code>）：</p>
+<div class="codehilite"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-T<span class="w"> </span>postgresql<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>pg_dump<span class="w"> </span>-U<span class="w"> </span>authentik<span class="w"> </span>-d<span class="w"> </span>authentik<span class="w"> </span><span class="p">|</span><span class="w"> </span>gzip<span class="w"> </span>&gt;<span class="w"> </span>authentik-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.sql.gz
+</code></pre></div>
+
+<p>备份配置三件套。<strong>密钥一旦丢失，所有会话和加密数据都会报废</strong>，因此 <code>.env</code> 与 <code>data/</code> 必须一并备份：</p>
+<div class="codehilite"><pre><span></span><code>tar<span class="w"> </span>czf<span class="w"> </span>authentik-config-<span class="k">$(</span>date<span class="w"> </span>+%F<span class="k">)</span>.tar.gz<span class="w"> </span>.env<span class="w"> </span>compose.yml<span class="w"> </span>compose.override.yml<span class="w"> </span>data/
+ls<span class="w"> </span>-lh<span class="w"> </span>authentik-*.gz
+</code></pre></div>
+
+<p><img alt="" src="images/Authentik-升级-001.png" /></p>
+<blockquote>
+<p>建议把备份文件复制到另一台主机或对象存储，避免与 compose 目录同盘损坏。</p>
+</blockquote>
+<h2 id="二-执行升级">二、执行升级</h2>
+<p>在 <code>.env</code> 中固定目标版本：</p>
+<div class="codehilite"><pre><span></span><code>AUTHENTIK_TAG=2026.8.5
+</code></pre></div>
+
+<p>拉取镜像并重建：</p>
+<div class="codehilite"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>pull
+docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div>
+
+<p>观察 server / worker 日志，确认数据库迁移完成、服务恢复正常。</p>
+<p><img alt="" src="images/Authentik-升级-002.png" /></p>
+<p><img alt="" src="images/Authentik-升级-003.png" /></p>
+<h2 id="三-重建-outpost">三、重建 Outpost</h2>
+<p>升级后如果 outpost 版本与 server 不一致，认证会失败。删除旧容器：</p>
+<div class="codehilite"><pre><span></span><code>docker<span class="w"> </span>rm<span class="w"> </span>-f<span class="w"> </span>ak-outpost-radius
+</code></pre></div>
+
+<p>然后在 authentik 管理界面的 Outposts 页面中，对应 outpost 选择「Re-create Docker container」，让系统按新版本重新生成容器。</p>
+<h2 id="四-回滚-升级后异常时">四、回滚（升级后异常时）</h2>
+<p>由于没有降级支持，回滚顺序是「停 → 恢复库 → 固定旧 tag 启动」：</p>
+<div class="codehilite"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>down
+
+<span class="c1"># 清空当前 schema 后恢复备份</span>
+docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>postgresql
+docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-T<span class="w"> </span>postgresql<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>authentik<span class="w"> </span>-d<span class="w"> </span>authentik<span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>-c<span class="w"> </span><span class="s1">'DROP SCHEMA public CASCADE; CREATE SCHEMA public;'</span>
+
+<span class="c1"># 或直接重建数据库卷后再导入</span>
+gunzip<span class="w"> </span>-c<span class="w"> </span>authentik-2026-11-04.sql.gz<span class="w"> </span><span class="p">|</span><span class="w"> </span><span class="se">\</span>
+<span class="w">  </span>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-T<span class="w"> </span>postgresql<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>authentik<span class="w"> </span>-d<span class="w"> </span>authentik
+
+<span class="c1"># 固定旧 tag 后启动</span>
+sed<span class="w"> </span>-i<span class="w"> </span><span class="s1">'s/^AUTHENTIK_TAG=.*/AUTHENTIK_TAG=2026.8.4/'</span><span class="w"> </span>.env
+docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d
+</code></pre></div>
+
+<blockquote>
+<p>回滚前提：升级前的数据库备份完整可用。操作前请再次确认备份文件可正常解压。</p>
+</blockquote>
+<h2 id="五-升级后维护">五、升级后维护</h2>
+<p>如果管理界面变慢（数据库迁移会让查询计划统计过时），登录数据库跑一次 <code>ANALYZE</code>：</p>
+<div class="codehilite"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>-T<span class="w"> </span>postgresql<span class="w"> </span>psql<span class="w"> </span>-U<span class="w"> </span>authentik<span class="w"> </span>-d<span class="w"> </span>authentik<span class="w"> </span>-c<span class="w"> </span><span class="s1">'ANALYZE;'</span>
+</code></pre></div>
+
+<h2 id="六-升级检查清单">六、升级检查清单</h2>
+<ul>
+<li>[ ] 数据库与配置三件套均已备份，且备份文件已异地保存</li>
+<li>[ ] <code>.env</code> 中 <code>AUTHENTIK_TAG</code> 已改为目标版本</li>
+<li>[ ] <code>docker compose pull</code> 与 <code>up -d</code> 执行完成，日志无报错</li>
+<li>[ ] Outpost 容器已重建，版本与 server 一致</li>
+<li>[ ] 登录、SSO、MFA 等核心流程验证通过</li>
+</ul>
+<hr />
+<blockquote>
+<p>本文由 WorkBuddy AI 编辑整理。</p>
+</blockquote>
+    </article>
+    <div class="pager"><a class="prev" href="authentik-nginx.html"><span class="dir">← 上一篇</span>Authentik + Nginx 流量架构</a><a class="next" href="authentik-ldap-outpost.html"><span class="dir">下一篇 →</span>Authentik LDAP outpost</a></div>
+    <p class="article-footer">本文由 WorkBuddy AI 编辑整理 · <a href="index.html">返回索引</a></p>
+  </div>
+  <aside class="toc"><div class="toc-title">目录</div><ul><li><a href="#概述">概述</a></li><li><a href="#一-升级前备份">一、升级前备份</a></li><li><a href="#二-执行升级">二、执行升级</a></li><li><a href="#三-重建-outpost">三、重建 Outpost</a></li><li><a href="#四-回滚-升级后异常时">四、回滚（升级后异常时）</a></li><li><a href="#五-升级后维护">五、升级后维护</a></li><li><a href="#六-升级检查清单">六、升级检查清单</a></li></ul></aside>
+</div></div>
+<footer class="site-footer"><div class="wrap">
+  <span>© 2026 cofferwu · 个人技术笔记</span>
+  <span>由 OneNote 笔记整理 · WorkBuddy AI 编辑优化</span>
+</div></footer>
+<script src="assets/site.js"></script>
+</body>
+</html>

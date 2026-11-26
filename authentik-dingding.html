@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Authentik 接入钉钉 · 技术博客</title>
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<header class="site-header"><div class="wrap">
+  <a class="brand" href="index.html">技术博客<span class="dot">.</span></a>
+  <nav><a href="index.html">首页</a><a href="https://github.com/cofferwu/blog" target="_blank">GitHub</a></nav>
+</div></header>
+<div class="article-wrap"><div class="article-layout">
+  <div>
+    <p class="crumb"><a href="index.html">首页</a> / <span class="badge">身份与认证</span></p>
+    <h1 class="article-title">Authentik 接入钉钉</h1>
+    <div class="article-meta"><time>2026-11-11</time><span>·</span><span>身份与认证</span></div>
+    <div class="article-tags"><span>Authentik</span><span>钉钉</span><span>OAuth</span></div>
+    <article class="post">
+<h2 id="概述">概述</h2>
+<p>为 Authentik 添加钉钉作为第三方登录源（OAuth Source），用户可直接使用钉钉扫码/账号登录。由于钉钉开放平台已提供标准的 OAuth 应用模板，整个过程通过 Web 向导即可完成，只需填写应用的 AppKey 与 AppSecret。</p>
+<h2 id="一-钉钉开放平台侧准备">一、钉钉开放平台侧准备</h2>
+<ol>
+<li>登录钉钉开放平台，创建企业内部应用（或第三方应用）。</li>
+<li>在应用的「安全设置」中获取 <strong>AppKey</strong>（Client ID）和 <strong>AppSecret</strong>（Client Secret）。</li>
+<li>设置回调域名为 authentik 的访问地址，例如 <code>auth.zjtdemo.cloud</code>，并在重定向 URL 中填入 authentik 生成的回调地址，格式为：</li>
+</ol>
+<p><code>https://&lt;authentik 域名&gt;/source/oauth/callback/&lt;slug&gt;/</code></p>
+<p>其中 <code>&lt;slug&gt;</code> 与下一步在 authentik 中创建的 Source slug 必须完全一致。</p>
+<blockquote>
+<p>注意：AppSecret 属于敏感凭据，不要提交到版本库或公开渠道。</p>
+</blockquote>
+<h2 id="二-在-authentik-添加钉钉源">二、在 Authentik 添加钉钉源</h2>
+<p>进入 <strong>Customization → Sources → Create</strong>，在类型列表中选择 <strong>Dingding</strong>（钉钉）模板。该模板已预置钉钉的授权、令牌与用户信息端点，无需手工填写 URL。</p>
+<p>按向导填写：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>填写内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Name</td>
+<td>Dingding</td>
+</tr>
+<tr>
+<td>Slug</td>
+<td>dingding（与回调 URL 中的 slug 一致）</td>
+</tr>
+<tr>
+<td>Consumer key</td>
+<td>钉钉 AppKey</td>
+</tr>
+<tr>
+<td>Consumer secret</td>
+<td>钉钉 AppSecret</td>
+</tr>
+</tbody>
+</table>
+<p>保存后，authentik 会生成回调 URL；把它回填到钉钉开放平台的重定向 URL 中并确认生效。</p>
+<p><img alt="" src="images/Authentik-Dingding-001.png" /></p>
+<h2 id="三-挂到登录页">三、挂到登录页</h2>
+<p>新建的 Source 默认不会出现在登录界面。进入：</p>
+<div class="codehilite"><pre><span></span><code>Flows and Stages → Flows → default-authentication-flow
+  → Stage Bindings → default-authentication-identification → Edit Stage
+  → Source Settings → Available Sources
+</code></pre></div>
+
+<p>把 Dingding 从 Available Sources 移到 Selected Sources。如需显示文字标签，勾选 <strong>Show sources' labels</strong>，否则登录页只显示图标。</p>
+<p>保存后，用无痕窗口打开登录页，应能看到钉钉登录入口。</p>
+<h2 id="四-验证与排障">四、验证与排障</h2>
+<ul>
+<li>点击钉钉登录，确认跳转到钉钉授权页并正常回跳。</li>
+<li>若回跳时报 <code>redirect_uri mismatch</code>，检查钉钉侧重定向 URL 与 authentik 回调地址是否<strong>逐字符一致</strong>（含协议、端口、结尾斜杠）。</li>
+<li>若提示应用无权限，检查钉钉应用是否已发布/启用，且授权范围包含获取用户基本信息。</li>
+</ul>
+<hr />
+<blockquote>
+<p>本文由 WorkBuddy AI 编辑整理。</p>
+</blockquote>
+    </article>
+    <div class="pager"><a class="prev"></a><a class="next" href="authentik-wechat-work.html"><span class="dir">下一篇 →</span>Authentik 企业微信登录</a></div>
+    <p class="article-footer">本文由 WorkBuddy AI 编辑整理 · <a href="index.html">返回索引</a></p>
+  </div>
+  <aside class="toc"><div class="toc-title">目录</div><ul><li><a href="#概述">概述</a></li><li><a href="#一-钉钉开放平台侧准备">一、钉钉开放平台侧准备</a></li><li><a href="#二-在-authentik-添加钉钉源">二、在 Authentik 添加钉钉源</a></li><li><a href="#三-挂到登录页">三、挂到登录页</a></li><li><a href="#四-验证与排障">四、验证与排障</a></li></ul></aside>
+</div></div>
+<footer class="site-footer"><div class="wrap">
+  <span>© 2026 cofferwu · 个人技术笔记</span>
+  <span>由 OneNote 笔记整理 · WorkBuddy AI 编辑优化</span>
+</div></footer>
+<script src="assets/site.js"></script>
+</body>
+</html>

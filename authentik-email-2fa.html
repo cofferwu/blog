@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Authentik 邮箱双因素认证 · 技术博客</title>
+<link rel="stylesheet" href="assets/site.css">
+</head>
+<body>
+<header class="site-header"><div class="wrap">
+  <a class="brand" href="index.html">技术博客<span class="dot">.</span></a>
+  <nav><a href="index.html">首页</a><a href="https://github.com/cofferwu/blog" target="_blank">GitHub</a></nav>
+</div></header>
+<div class="article-wrap"><div class="article-layout">
+  <div>
+    <p class="crumb"><a href="index.html">首页</a> / <span class="badge">身份与认证</span></p>
+    <h1 class="article-title">Authentik 邮箱双因素认证</h1>
+    <div class="article-meta"><time>2026-10-26</time><span>·</span><span>身份与认证</span></div>
+    <div class="article-tags"><span>Authentik</span><span>2FA</span><span>SMTP</span><span>邮箱</span></div>
+    <article class="post">
+<h2 id="概述">概述</h2>
+<p>本文记录为 authentik 配置邮箱验证码作为第二因素（Email MFA）的完整流程：SMTP 配置 → 创建邮件验证器 Stage → 在 MFA 验证阶段启用 Email → 绑定认证流 → 自定义邮件模板 → 验证。</p>
+<blockquote>
+<p>核心提醒：<strong>只创建 Email Stage 是不够的</strong>。必须把它加入 MFA validation stage 的 Configuration stages，并勾选 Email Authenticators 设备类，登录时才会真正发送验证码。这是最常见的漏配点。</p>
+</blockquote>
+<h2 id="一-配置-smtp">一、配置 SMTP</h2>
+<p>在 <code>.env</code> 中添加邮箱配置（465 端口对应 SSL）：</p>
+<div class="codehilite"><pre><span></span><code>AUTHENTIK_EMAIL__HOST=mail.ksomail.com
+AUTHENTIK_EMAIL__PORT=465
+AUTHENTIK_EMAIL__USE_SSL=true
+AUTHENTIK_EMAIL__USE_TLS=false
+AUTHENTIK_EMAIL__USERNAME=jt.zhu@[邮箱后缀已隐藏]
+AUTHENTIK_EMAIL__PASSWORD=
+AUTHENTIK_EMAIL__FROM=jt.zhu@[邮箱后缀已隐藏]
+AUTHENTIK_EMAIL__TIMEOUT=10
+</code></pre></div>
+
+<blockquote>
+<p>说明：邮箱后缀（域名部分）已做脱敏处理，实际部署时请替换为贵单位的邮件域名。</p>
+</blockquote>
+<p>测试邮件是否能正常发出：</p>
+<div class="codehilite"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>run<span class="w"> </span>--rm<span class="w"> </span>worker<span class="w"> </span>ak<span class="w"> </span>test_email<span class="w"> </span>jt.zhu@<span class="o">[</span>邮箱后缀已隐藏<span class="o">]</span>
+</code></pre></div>
+
+<p>或进入 worker 容器后在内部执行：</p>
+<div class="codehilite"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span><span class="nb">exec</span><span class="w"> </span>worker<span class="w"> </span>/bin/bash
+ak<span class="w"> </span>test_email<span class="w"> </span>jt.zhu@<span class="o">[</span>邮箱后缀已隐藏<span class="o">]</span>
+</code></pre></div>
+
+<blockquote>
+<p>SSL 与 TLS 不要同时开启：465 用 <code>USE_SSL=true</code> / <code>USE_TLS=false</code>；587 则相反。</p>
+</blockquote>
+<h2 id="二-创建-authenticator-email-stage">二、创建 Authenticator Email Stage</h2>
+<p>路径：<strong>Flows &amp; Stages → Stages → Create → Authenticator Email Stage</strong>（部分版本名为 Email Authenticator Setup Stage）。</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>建议值</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Name</td>
+<td><code>email-mfa-setup</code></td>
+</tr>
+<tr>
+<td>Friendly name</td>
+<td>邮箱验证码</td>
+</tr>
+<tr>
+<td>Token expiry</td>
+<td><code>minutes=10</code>（验证码有效期，别太长）</td>
+</tr>
+<tr>
+<td>Subject</td>
+<td>你的验证码（或留默认）</td>
+</tr>
+<tr>
+<td>Template</td>
+<td>留空用内置默认</td>
+</tr>
+<tr>
+<td>From address</td>
+<td>留空 → 使用 <code>.env</code> 的 FROM</td>
+</tr>
+<tr>
+<td>Use global settings</td>
+<td>勾选（继承第 1 步的 SMTP）</td>
+</tr>
+<tr>
+<td>Configure Flow</td>
+<td>可留空（仅「用户自助添加设备」时才需要）</td>
+</tr>
+</tbody>
+</table>
+<p>它的作用：用户被要求注册 Email MFA 时，authentik 向用户档案中的 email 发送验证码，用户回填后完成注册。</p>
+<p><img alt="" src="images/Authentik-邮箱双因素认证-001.png" /></p>
+<h2 id="三-在-mfa-验证阶段启用-email-最关键">三、在 MFA 验证阶段启用 Email（最关键）</h2>
+<p>编辑 <code>default-authentication-mfa-validation</code>（<strong>Flows &amp; Stages → Stages</strong>）：</p>
+<table>
+<thead>
+<tr>
+<th>字段</th>
+<th>必须设置</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Device classes</td>
+<td>勾选 <strong>Email Authenticators</strong>（可同时勾 TOTP / Static Tokens）</td>
+</tr>
+<tr>
+<td>Not configured action</td>
+<td><code>Configure</code>（强制注册；测试期别用 Deny）</td>
+</tr>
+<tr>
+<td>Configuration stages</td>
+<td>把第 2 步创建的 Email Stage 加入 <strong>Selected Stages</strong></td>
+</tr>
+<tr>
+<td>Last auth threshold</td>
+<td>默认 5 分钟即可</td>
+</tr>
+<tr>
+<td>Timeout</td>
+<td>默认即可</td>
+</tr>
+</tbody>
+</table>
+<p>只建 Stage、不把它加进 Configuration stages，或者不勾 Device classes，登录时都不会发 token。</p>
+<p><img alt="" src="images/Authentik-邮箱双因素认证-002.png" /></p>
+<h2 id="四-绑定认证流与用户邮箱">四、绑定认证流与用户邮箱</h2>
+<p><strong>1. 绑定到认证流</strong>（SAML 登录实际走这条）</p>
+<p><code>Flows &amp; Stages → Flows → default-authentication-flow → Stage Bindings</code>，确认 <code>default-authentication-mfa-validation</code> 已存在，且顺序在密码验证之后。</p>
+<blockquote>
+<p>注意：第 2 步的 Email Stage <strong>不要</strong>直接绑到这里，它是通过 validation stage 的 Configuration stages 间接调用的。</p>
+</blockquote>
+<p><strong>2. 用户 email 必须正确</strong></p>
+<p><code>Directory → Users → 目标用户 → Email</code> 字段是 token 的接收地址。LDAP 同步用户需确认 <code>mail</code> 属性已正确映射，不能为空。</p>
+<h2 id="五-验证">五、验证</h2>
+<p>用一个尚未绑定 MFA 的测试用户：</p>
+<ol>
+<li>无痕窗口打开 <code>https://auth.example.com</code>。</li>
+<li>输入账号密码 → 应出现「选择验证方式」，其中包含 Email 选项。</li>
+<li>选择 Email → 页面提示「已发送验证码到 xxx@邮箱」。</li>
+<li>查收邮件（含垃圾箱）→ 回填验证码 → 完成登录。</li>
+</ol>
+<blockquote>
+<p>只有用户<strong>注册了邮箱认证</strong>时才会触发发送 token 邮件；注册多种认证方式时，登录页会列出多个选项供选择。</p>
+</blockquote>
+<p><img alt="" src="images/Authentik-邮箱双因素认证-003.png" /></p>
+<p><img alt="" src="images/Authentik-邮箱双因素认证-004.png" /></p>
+<h2 id="六-自定义邮件模板">六、自定义邮件模板</h2>
+<p>进入自定义模板目录并创建邮件 HTML：</p>
+<div class="codehilite"><pre><span></span><code><span class="nb">cd</span><span class="w"> </span>~/.docker/compose/authentik/custom-templates
+sudo<span class="w"> </span>mkdir<span class="w"> </span>email
+<span class="nb">cd</span><span class="w"> </span>email
+sudo<span class="w"> </span>vi<span class="w"> </span>email_otp.html
+</code></pre></div>
+
+<p><code>email_otp.html</code> 示例：</p>
+<div class="codehilite"><pre><span></span><code><span class="cp">{%</span> <span class="k">load</span> <span class="nv">i18n</span> <span class="cp">%}</span>
+<span class="x">&lt;style&gt;</span>
+<span class="x">  body { font-family: Arial, "Microsoft YaHei", sans-serif; font-size: 14px; color: #212124; line-height: 1.6; }</span>
+<span class="x">  .box { max-width: 480px; margin: 0 auto; padding: 24px; border: 1px solid #e0e0e0; border-radius: 6px; }</span>
+<span class="x">  .code { font-size: 32px; letter-spacing: 8px; font-weight: 700; color: #1a73e8; text-align: center; padding: 16px 0; }</span>
+<span class="x">  .muted { color: #888; font-size: 12px; }</span>
+<span class="x">&lt;/style&gt;</span>
+<span class="x">&lt;div class="box"&gt;</span>
+<span class="x">  &lt;p&gt;您好 </span><span class="cp">{{</span> <span class="nv">user.username</span> <span class="cp">}}</span><span class="x">，&lt;/p&gt;</span>
+<span class="x">  &lt;p&gt;您的登录验证码是：&lt;/p&gt;</span>
+<span class="x">  &lt;div class="code"&gt;</span><span class="cp">{{</span> <span class="nv">token</span> <span class="cp">}}</span><span class="x">&lt;/div&gt;</span>
+<span class="x">  &lt;p&gt;请在登录页面输入该验证码完成验证。&lt;/p&gt;</span>
+<span class="x">  &lt;p class="muted"&gt;如果这不是您本人的操作，请忽略此邮件，并考虑修改密码。&lt;/p&gt;</span>
+<span class="x">&lt;/div&gt;</span>
+</code></pre></div>
+
+<p>如需修改纯文本预览内容，编辑 <code>email_otp.txt</code>：</p>
+<div class="codehilite"><pre><span></span><code><span class="cp">{%</span> <span class="k">load</span> <span class="nv">i18n</span> <span class="cp">%}{%</span> <span class="k">load</span> <span class="nv">humanize</span> <span class="cp">%}{%</span> <span class="k">autoescape</span> <span class="nv">off</span> <span class="cp">%}</span>
+<span class="cp">{%</span> <span class="k">blocktrans</span> <span class="k">with</span> <span class="nv">username</span><span class="o">=</span><span class="nv">user.username</span> <span class="cp">%}</span><span class="x">您好 </span><span class="cp">{{</span> <span class="nv">username</span> <span class="cp">}}</span><span class="x">，这是您的登录验证码。</span><span class="cp">{%</span> <span class="k">endblocktrans</span> <span class="cp">%}</span>
+<span class="cp">{{</span> <span class="nv">token</span> <span class="cp">}}</span>
+<span class="cp">{%</span> <span class="k">blocktrans</span> <span class="k">with</span> <span class="nv">expires</span><span class="o">=</span><span class="nv">expires</span><span class="o">|</span><span class="nf">timeuntil</span> <span class="cp">%}</span><span class="x">该验证码 </span><span class="cp">{{</span> <span class="nv">expires</span> <span class="cp">}}</span><span class="x"> 内有效。如非本人操作，请忽略此邮件。</span><span class="cp">{%</span> <span class="k">endblocktrans</span> <span class="cp">%}</span>
+<span class="x">-- authentik</span>
+<span class="cp">{%</span> <span class="k">endautoescape</span> <span class="cp">%}</span>
+</code></pre></div>
+
+<p>配置完成后重建容器使模板生效：</p>
+<div class="codehilite"><pre><span></span><code>docker<span class="w"> </span>compose<span class="w"> </span>up<span class="w"> </span>-d<span class="w"> </span>--force-recreate<span class="w"> </span>server<span class="w"> </span>worker
+</code></pre></div>
+
+<p><img alt="" src="images/Authentik-邮箱双因素认证-005.png" /></p>
+<p><img alt="" src="images/Authentik-邮箱双因素认证-006.png" /></p>
+<h2 id="七-排障清单">七、排障清单</h2>
+<table>
+<thead>
+<tr>
+<th>现象</th>
+<th>检查点</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>登录时不出现 Email 选项</td>
+<td>Device classes 是否勾选 Email Authenticators</td>
+</tr>
+<tr>
+<td>完全没有发邮件</td>
+<td>Email Stage 是否加入 validation stage 的 Configuration stages</td>
+</tr>
+<tr>
+<td>SMTP 连接失败</td>
+<td>SSL/TLS 组合是否正确，密码是否正确，<code>ak test_email</code> 是否通过</td>
+</tr>
+<tr>
+<td>收不到邮件</td>
+<td>用户 email 是否为空，垃圾箱/反垃圾网关是否拦截</td>
+</tr>
+<tr>
+<td>验证码提示过期</td>
+<td>Token expiry 是否过短，服务器时间是否同步</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<blockquote>
+<p>本文由 WorkBuddy AI 编辑整理。</p>
+</blockquote>
+    </article>
+    <div class="pager"><a class="prev" href="authentik-custom-footer.html"><span class="dir">← 上一篇</span>Authentik 自定义页脚品牌</a><a class="next" href="authentik-feishu-sso.html"><span class="dir">下一篇 →</span>Authentik 飞书 SSO 配置</a></div>
+    <p class="article-footer">本文由 WorkBuddy AI 编辑整理 · <a href="index.html">返回索引</a></p>
+  </div>
+  <aside class="toc"><div class="toc-title">目录</div><ul><li><a href="#概述">概述</a></li><li><a href="#一-配置-smtp">一、配置 SMTP</a></li><li><a href="#二-创建-authenticator-email-stage">二、创建 Authenticator Email Stage</a></li><li><a href="#三-在-mfa-验证阶段启用-email-最关键">三、在 MFA 验证阶段启用 Email（最关键）</a></li><li><a href="#四-绑定认证流与用户邮箱">四、绑定认证流与用户邮箱</a></li><li><a href="#五-验证">五、验证</a></li><li><a href="#六-自定义邮件模板">六、自定义邮件模板</a></li><li><a href="#七-排障清单">七、排障清单</a></li></ul></aside>
+</div></div>
+<footer class="site-footer"><div class="wrap">
+  <span>© 2026 cofferwu · 个人技术笔记</span>
+  <span>由 OneNote 笔记整理 · WorkBuddy AI 编辑优化</span>
+</div></footer>
+<script src="assets/site.js"></script>
+</body>
+</html>
