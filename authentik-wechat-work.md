@@ -1,13 +1,12 @@
 ---
 title: "Authentik 企业微信登录"
 date: 2026-11-10 06:18:22 +00:00
-categories:
-  - 身份与认证
-tags:
-  - Authentik
-  - 企业微信
-  - OAuth
+categories: 身份与认证
+tags: ["Authentik", "企业微信", "OAuth"]
 ---
+
+<p class="back-index"><a href="index.html">← 返回文章索引</a></p>
+
 
 ## 概述
 

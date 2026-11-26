@@ -1,14 +1,12 @@
 ---
 title: "Dell Wyse 瘦客户端 Citrix 优化"
 date: 2021-12-02 04:06:38 +00:00
-categories:
-  - 桌面虚拟化
-tags:
-  - Citrix
-  - Wyse
-  - 瘦客户端
-  - 注册表
+categories: 桌面虚拟化
+tags: ["Citrix", "Wyse", "瘦客户端", "注册表"]
 ---
+
+<p class="back-index"><a href="index.html">← 返回文章索引</a></p>
+
 
 ## 概述
 

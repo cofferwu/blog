@@ -1,13 +1,12 @@
 ---
 title: "Authentik 接入钉钉"
 date: 2026-11-11 08:46:15 +00:00
-categories:
-  - 身份与认证
-tags:
-  - Authentik
-  - 钉钉
-  - OAuth
+categories: 身份与认证
+tags: ["Authentik", "钉钉", "OAuth"]
 ---
+
+<p class="back-index"><a href="index.html">← 返回文章索引</a></p>
+
 
 ## 概述
 

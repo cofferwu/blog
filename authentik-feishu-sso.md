@@ -1,14 +1,12 @@
 ---
 title: "Authentik 飞书 SSO 配置"
 date: 2026-10-26 02:12:58 +00:00
-categories:
-  - 身份与认证
-tags:
-  - Authentik
-  - 飞书
-  - SSO
-  - OAuth
+categories: 身份与认证
+tags: ["Authentik", "飞书", "SSO", "OAuth"]
 ---
+
+<p class="back-index"><a href="index.html">← 返回文章索引</a></p>
+
 
 ## 概述
 

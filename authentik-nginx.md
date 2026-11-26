@@ -1,14 +1,12 @@
 ---
 title: "Authentik + Nginx 流量架构"
 date: 2026-11-04 02:51:11 +00:00
-categories:
-  - 身份与认证
-tags:
-  - Authentik
-  - Nginx
-  - HTTPS
-  - LDAP
+categories: 身份与认证
+tags: ["Authentik", "Nginx", "HTTPS", "LDAP"]
 ---
+
+<p class="back-index"><a href="index.html">← 返回文章索引</a></p>
+
 
 ## 概述
 

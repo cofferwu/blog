@@ -1,14 +1,12 @@
 ---
 title: "Authentik LDAP outpost"
 date: 2026-10-28 02:32:47 +00:00
-categories:
-  - 身份与认证
-tags:
-  - Authentik
-  - LDAP
-  - Outpost
-  - Docker
+categories: 身份与认证
+tags: ["Authentik", "LDAP", "Outpost", "Docker"]
 ---
+
+<p class="back-index"><a href="index.html">← 返回文章索引</a></p>
+
 
 ## 概述
 

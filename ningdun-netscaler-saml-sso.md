@@ -1,14 +1,12 @@
 ---
 title: "宁盾与 NetScaler SAML SSO 对接"
 date: 2026-10-16 05:51:37 +00:00
-categories:
-  - 身份与认证
-tags:
-  - 宁盾
-  - NetScaler
-  - SAML
-  - SSO
+categories: 身份与认证
+tags: ["宁盾", "NetScaler", "SAML", "SSO"]
 ---
+
+<p class="back-index"><a href="index.html">← 返回文章索引</a></p>
+
 
 ## 概述
 

@@ -1,14 +1,12 @@
 ---
 title: "Authentik 升级与备份"
 date: 2026-11-04 04:07:59 +00:00
-categories:
-  - 身份与认证
-tags:
-  - Authentik
-  - Docker
-  - 备份
-  - 升级
+categories: 身份与认证
+tags: ["Authentik", "Docker", "备份", "升级"]
 ---
+
+<p class="back-index"><a href="index.html">← 返回文章索引</a></p>
+
 
 ## 概述
 

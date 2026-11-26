@@ -1,14 +1,13 @@
 ---
 title: "Authentik 邮箱双因素认证"
 date: 2026-10-26 05:18:44 +00:00
-categories:
-  - 身份与认证
-tags:
-  - Authentik
-  - 2FA
-  - SMTP
-  - 邮箱
+categories: 身份与认证
+tags: ["Authentik", "2FA", "SMTP", "邮箱"]
 ---
+
+<p class="back-index"><a href="index.html">← 返回文章索引</a></p>
+
+{% raw %}
 
 ## 概述
 
@@ -174,3 +173,4 @@ docker compose up -d --force-recreate server worker
 ---
 
 > 本文由 WorkBuddy AI 编辑整理。
+{% endraw %}

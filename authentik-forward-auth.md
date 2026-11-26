@@ -1,14 +1,12 @@
 ---
 title: "Authentik Forward Auth 反向代理认证"
 date: 2026-11-04 02:54:06 +00:00
-categories:
-  - 身份与认证
-tags:
-  - Authentik
-  - Nginx
-  - Forward Auth
-  - 反向代理
+categories: 身份与认证
+tags: ["Authentik", "Nginx", "Forward Auth", "反向代理"]
 ---
+
+<p class="back-index"><a href="index.html">← 返回文章索引</a></p>
+
 
 ## 概述
 

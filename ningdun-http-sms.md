@@ -1,14 +1,12 @@
 ---
 title: "宁盾 HTTP 短信通道配置"
 date: 2026-07-06 03:55:42 +00:00
-categories:
-  - 身份与认证
-tags:
-  - 宁盾
-  - 短信
-  - HTTP
-  - Rocky Linux
+categories: 身份与认证
+tags: ["宁盾", "短信", "HTTP", "Rocky Linux"]
 ---
+
+<p class="back-index"><a href="index.html">← 返回文章索引</a></p>
+
 
 ## 概述
 
