@@ -21,7 +21,7 @@
     <article class="post">
 {{ content }}
     </article>
-    {% assign docs = site.pages | where_exp: "p", "p.date and p.title" | sort: "date" | reverse %}
+    {% assign docs = site.pages | where_exp: "p", "p.title" | where_exp: "p", "p.date" | sort: "date" | reverse %}
     {% assign prev = nil %}
     {% assign next = nil %}
     {% assign isnext = false %}
