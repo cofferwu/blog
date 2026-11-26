@@ -36,10 +36,12 @@ AUTHENTIK_EMAIL__TIMEOUT=10
 
 测试邮件是否能正常发出：
 
+```bash
 docker compose run --rm worker ak test_email jt.zhu@[邮箱后缀已隐藏]
 
 或进入 worker 容器后在内部执行：
 
+```bash
 docker compose exec worker /bin/bash
 ak test_email jt.zhu@[邮箱后缀已隐藏]
 
@@ -111,6 +113,7 @@ ak test_email jt.zhu@[邮箱后缀已隐藏]
 
 进入自定义模板目录并创建邮件 HTML：
 
+```bash
 cd ~/.docker/compose/authentik/custom-templates
 sudo mkdir email
 cd email
@@ -118,4 +121,69 @@ sudo vi email_otp.html
 
 `email_otp.html` 示例：
 
-
+
+{% raw %}
+```django
+{% load i18n %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
+<style>
+  body { font-family: Arial, "Microsoft YaHei", sans-serif; font-size: 14px; color: #212124; line-height: 1.6; }
+  .box { max-width: 480px; margin: 0 auto; padding: 24px; border: 1px solid #e0e0e0; border-radius: 6px; }
+  .code { font-size: 32px; letter-spacing: 8px; font-weight: 700; color: #1a73e8; text-align: center; padding: 16px 0; }
+  .muted { color: #888; font-size: 12px; }
+</style>
+</head>
+<body>
+<div class="box">
+  <p>您好 {{ user.username }}，</p>
+  <p>您的登录验证码是：</p>
+  <p class="code">{{ token }}</p>
+  <p>请在登录页面输入该验证码完成验证。</p>
+  <p class="muted">如果这不是您本人的操作，请忽略此邮件，并考虑修改密码。</p>
+</div>
+</body>
+</html>
+{% endraw %}
+
+
+如需修改纯文本预览内容，编辑 `email_otp.txt`：
+
+{% raw %}
+```django
+{% load i18n %}{% load humanize %}{% autoescape off %}{% blocktrans with username=user.username %}您好 {{ username }}，这是您的登录验证码。{% endblocktrans %}
+{{ token }}
+{% blocktrans with expires=expires|timeuntil %}
+该验证码 {{ expires }} 内有效。如非本人操作，请忽略此邮件。
+{% endblocktrans %}
+--
+authentik
+{% endautoescape %}
+{% endraw %}
+
+
+配置完成后重建容器使模板生效：
+
+```bash
+docker compose up -d --force-recreate server worker
+
+![](images/Authentik-邮箱双因素认证-005.png)
+
+![](images/Authentik-邮箱双因素认证-006.png)
+
+## 七、排障清单
+
+| 现象 | 检查点 |
+| --- | --- |
+| 登录时不出现 Email 选项 | Device classes 是否勾选 Email Authenticators |
+| 完全没有发邮件 | Email Stage 是否加入 validation stage 的 Configuration stages |
+| SMTP 连接失败 | SSL/TLS 组合是否正确，密码是否正确，`ak test_email` 是否通过 |
+| 收不到邮件 | 用户 email 是否为空，垃圾箱/反垃圾网关是否拦截 |
+| 验证码提示过期 | Token expiry 是否过短，服务器时间是否同步 |
+
+---
+
+> 本文由 WorkBuddy AI 编辑整理。
