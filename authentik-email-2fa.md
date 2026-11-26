@@ -125,37 +125,47 @@ sudo vi email_otp.html
 
 `email_otp.html` 示例：
 
-{% raw %}
+
 ```django
 {% load i18n %}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width">
 <style>
   body { font-family: Arial, "Microsoft YaHei", sans-serif; font-size: 14px; color: #212124; line-height: 1.6; }
   .box { max-width: 480px; margin: 0 auto; padding: 24px; border: 1px solid #e0e0e0; border-radius: 6px; }
   .code { font-size: 32px; letter-spacing: 8px; font-weight: 700; color: #1a73e8; text-align: center; padding: 16px 0; }
   .muted { color: #888; font-size: 12px; }
 </style>
+</head>
+<body>
 <div class="box">
   <p>您好 {{ user.username }}，</p>
   <p>您的登录验证码是：</p>
-  <div class="code">{{ token }}</div>
+  <p class="code">{{ token }}</p>
   <p>请在登录页面输入该验证码完成验证。</p>
   <p class="muted">如果这不是您本人的操作，请忽略此邮件，并考虑修改密码。</p>
 </div>
+</body>
+</html>
 ```
-{% endraw %}
+
 
 如需修改纯文本预览内容，编辑 `email_otp.txt`：
 
-{% raw %}
 ```django
-{% load i18n %}{% load humanize %}{% autoescape off %}
-{% blocktrans with username=user.username %}您好 {{ username }}，这是您的登录验证码。{% endblocktrans %}
+{% load i18n %}{% load humanize %}{% autoescape off %}{% blocktrans with username=user.username %}您好 {{ username }}，这是您的登录验证码。{% endblocktrans %}
 {{ token }}
-{% blocktrans with expires=expires|timeuntil %}该验证码 {{ expires }} 内有效。如非本人操作，请忽略此邮件。{% endblocktrans %}
--- authentik
+{% blocktrans with expires=expires|timeuntil %}
+该验证码 {{ expires }} 内有效。如非本人操作，请忽略此邮件。
+{% endblocktrans %}
+--
+authentik
 {% endautoescape %}
 ```
-{% endraw %}
+
 
 配置完成后重建容器使模板生效：
 
