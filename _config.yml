@@ -19,7 +19,7 @@ defaults:
   - scope:
       path: ""
     values:
-      layout: page
+      layout: default
 
 exclude:
   - README.md

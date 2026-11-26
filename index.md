@@ -1,6 +1,6 @@
 ---
 title: 技术博客
-layout: page
+layout: default
 ---
 
 <p class="site-intro">共 12 篇文章 · 由 OneNote 笔记整理，WorkBuddy AI 编排优化</p>
