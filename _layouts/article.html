@@ -5,18 +5,29 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>{{ page.title | escape }} · 技术博客</title>
 <link rel="stylesheet" href="{{ '/assets/site.css' | relative_url }}">
+<script>
+/* 首屏无闪烁：先于渲染恢复主题偏好 */
+(function(){try{var t=localStorage.getItem('theme');if(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t)document.documentElement.dataset.theme=t;}catch(e){}})();
+</script>
 </head>
 <body>
 <header class="site-header"><div class="wrap">
   <a class="brand" href="{{ '/index.html' | relative_url }}">技术博客<span class="dot">.</span></a>
   <nav><a href="{{ '/index.html' | relative_url }}">首页</a><a href="https://github.com/cofferwu/blog" target="_blank">GitHub</a></nav>
+  <button class="theme-toggle" id="themeToggle" title="切换深浅色">☾</button>
 </div></header>
 {% assign cat = page.categories.first | default: '未分类' %}
+<div class="progress"><div class="bar" id="pbar"></div></div>
 <div class="article-wrap"><div class="article-layout">
   <div>
     <p class="crumb"><a href="{{ '/index.html' | relative_url }}">首页</a> / <span class="badge">{{ cat }}</span></p>
     <h1 class="article-title">{{ page.title | escape }}</h1>
-    <div class="article-meta"><time>{{ page.date | date: "%Y-%m-%d" }}</time><span>·</span><span>{{ cat }}</span></div>
+    <div class="article-meta">
+      <span class="badge">{{ cat }}</span>
+      {% assign ym = page.date | date: "%Y-%m" %}
+      <a class="meta-time" href="{{ '/index.html' | relative_url }}?month={{ ym }}" title="查看 {{ ym }} 当月发布的全部文章"><span class="cal">📅</span><time>{{ page.date | date: "%Y-%m-%d" }}</time></a>
+      <span class="readinfo" id="readinfo"></span>
+    </div>
     <div class="article-tags">{% for t in page.tags %}<span>{{ t | escape }}</span>{% endfor %}</div>
     <article class="post">
 {{ content }}
@@ -40,14 +51,36 @@
       {% if prev %}<a class="prev" href="{{ prev.url | relative_url }}"><span class="dir">← 上一篇</span>{{ prev.title | escape }}</a>{% else %}<a class="prev"></a>{% endif %}
       {% if next %}<a class="next" href="{{ next.url | relative_url }}"><span class="dir">下一篇 →</span>{{ next.title | escape }}</a>{% else %}<a class="next"></a>{% endif %}
     </div>
+    <div class="related" id="related" style="display:none">
+      <h2>相关文章</h2>
+      <div class="rel-grid" id="relGrid"></div>
+    </div>
     <p class="article-footer">本文由 WorkBuddy AI 编辑整理 · <a href="{{ '/index.html' | relative_url }}">返回索引</a></p>
   </div>
-  <aside class="toc"><div class="toc-title">目录</div><ul class="toc-list"></ul></aside>
+  <aside>
+    <nav class="side-card toc"><div class="toc-title">目录</div><ul class="toc-list"></ul></nav>
+    <div class="side-card" id="tagCard" style="display:none">
+      <div class="toc-title">标签</div>
+      <div class="tagcloud" id="tagcloud"></div>
+    </div>
+    <div class="side-card contact">
+      <div class="toc-title">联系作者</div>
+      <p>文章问题、交流合作，欢迎邮件联系：</p>
+      <div class="btns">
+        <a class="btn" href="mailto:cofferwu@sina.com"><span class="dot m"></span>邮箱联系</a>
+      </div>
+    </div>
+  </aside>
 </div></div>
 <footer class="site-footer"><div class="wrap">
   <span>© 2026 cofferwu · 个人技术笔记</span>
   <span>由 OneNote 笔记整理 · WorkBuddy AI 编辑优化</span>
 </div></footer>
+<script id="articleData" type="application/json">[
+{%- for p in docs -%}
+{"u":{{ p.url | relative_url | jsonify }},"t":{{ p.title | jsonify }},"d":{{ p.date | date: '%Y-%m-%d' | jsonify }},"c":{{ p.categories.first | default: '未分类' | jsonify }},"g":[{%- for tg in p.tags -%}{{ tg | jsonify }}{%- unless forloop.last -%},{%- endunless -%}{%- endfor -%}]}{%- unless forloop.last -%},{%- endunless -%}
+{%- endfor -%}]
+</script>
 <script src="{{ '/assets/site.js' | relative_url }}"></script>
 </body>
 </html>
