@@ -121,6 +121,10 @@ add authentication samlAction saml_action_polarsight \
 
 *企业微信扫码登录流程演示*
 
+<video poster="attachments/Citrix-ningdun-SSO-poster.jpg" controls preload="metadata" style="width:100%;border-radius:10px;border:1px solid #e6e8eb;" src="attachments/Citrix-ningdun-SSO.mp4"></video>
+
+*Citrix + 宁盾 SSO 登录演示*
+
 ---
 
 > 本文由 WorkBuddy AI 编辑整理，本人修改并定稿。
