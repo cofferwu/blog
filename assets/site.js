@@ -13,18 +13,55 @@ if (tocList) {
     tocList.innerHTML = html;
   }
 }
-// 分类筛选
-document.querySelectorAll('.chip').forEach(function (c) {
-  c.addEventListener('click', function () {
-    document.querySelectorAll('.chip').forEach(function (x) { x.classList.remove('on'); });
-    c.classList.add('on');
-    var cat = c.dataset.cat;
-    document.querySelectorAll('.card').forEach(function (card) {
-      card.style.display = (cat === 'all' || card.dataset.cat === cat) ? '' : 'none';
+// ===== 首页：分类筛选 + 分页（每页 10 篇） =====
+var PER_PAGE = 10, curCat = 'all', curPage = 1;
+var rows = Array.prototype.slice.call(document.querySelectorAll('#list .row'));
+
+function visibleRows() {
+  return curCat === 'all' ? rows : rows.filter(function (r) { return r.dataset.cat === curCat; });
+}
+function renderHome() {
+  var docs = visibleRows();
+  var pages = Math.max(1, Math.ceil(docs.length / PER_PAGE));
+  if (curPage > pages) curPage = pages;
+  var start = (curPage - 1) * PER_PAGE;
+  rows.forEach(function (r) { r.style.display = 'none'; });
+  docs.slice(start, start + PER_PAGE).forEach(function (r) { r.style.display = ''; });
+  var empty = document.getElementById('empty');
+  if (empty) empty.style.display = docs.length ? 'none' : 'block';
+
+  var bar = document.getElementById('pagerbar');
+  if (!bar) return;
+  if (pages <= 1) { bar.innerHTML = ''; return; }
+  var h = '<button class="pbtn" data-p="' + (curPage - 1) + '"' + (curPage <= 1 ? ' disabled' : '') + '>‹ 上一页</button>';
+  for (var i = 1; i <= pages; i++)
+    h += '<button class="pbtn' + (i === curPage ? ' on' : '') + '" data-p="' + i + '">' + i + '</button>';
+  h += '<button class="pbtn" data-p="' + (curPage + 1) + '"' + (curPage >= pages ? ' disabled' : '') + '>下一页 ›</button>'
+     + '<span class="pinfo">第 ' + curPage + ' / ' + pages + ' 页 · 共 ' + docs.length + ' 篇</span>';
+  bar.innerHTML = h;
+  bar.querySelectorAll('.pbtn[data-p]').forEach(function (b) {
+    b.addEventListener('click', function () {
+      var p = parseInt(b.dataset.p, 10);
+      if (p >= 1 && p <= pages && p !== curPage) {
+        curPage = p; renderHome();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
     });
   });
-});
-// 代码复制
+}
+var filterbar = document.getElementById('filterbar');
+if (filterbar && rows.length) {
+  filterbar.querySelectorAll('.chip').forEach(function (c) {
+    c.addEventListener('click', function () {
+      filterbar.querySelectorAll('.chip').forEach(function (x) { x.classList.remove('on'); });
+      c.classList.add('on');
+      curCat = c.dataset.cat; curPage = 1;
+      renderHome();
+    });
+  });
+  renderHome();
+}
+// ===== 文章页：代码复制 =====
 document.querySelectorAll('.post pre').forEach(function (pre) {
   var wrap = pre.closest('.codehilite, .highlighter-rouge, .highlight') || pre.parentElement;
   if (!wrap) return;
