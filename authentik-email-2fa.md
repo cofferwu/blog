@@ -114,7 +114,7 @@ ak test_email jt.zhu@[邮箱后缀已隐藏]
 
 ## 六、自定义邮件模板
 
-进入自定义模板目录并创建邮件 HTML：
+如果不想使用Authentik默认的邮件模板，可以进入自定义模板目录并创建新的邮件模板 HTML：
 
 ```bash
 cd ~/.docker/compose/authentik/custom-templates
@@ -162,6 +162,7 @@ sudo vi email_otp.html
 ```bash
 docker compose up -d --force-recreate server worker
 ```
+新模板生效后，还需要在Email stage中选择新的邮件模板，这样平台才能使用新模板发送邮件。
 
 ![](images/Authentik-邮箱双因素认证-005.png)
 
@@ -179,4 +180,4 @@ docker compose up -d --force-recreate server worker
 
 ---
 
-> 本文由 WorkBuddy AI 编辑整理。
+> 本文由 WorkBuddy AI 编辑整理，本人修改并定稿。
