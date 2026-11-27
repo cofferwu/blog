@@ -1,6 +1,6 @@
 ---
 title: "Authentik 邮箱双因素认证"
-date: 2026-10-26 05:18:44 +00:00
+date: 2026-10-26 05:18:44
 categories:
   - 身份与认证
 tags:
