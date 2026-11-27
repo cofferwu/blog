@@ -13,7 +13,7 @@ sum: "为 Authentik 添加钉钉作为第三方登录源（OAuth Source），用
 
 ## 概述
 
-为 Authentik 添加钉钉作为第三方登录源（OAuth Source），用户可直接使用钉钉扫码/账号登录。由于钉钉开发者平台没有提供标准的OAuth连接协议，authentik无法使用通用OAuth Source来直接对接钉钉。通过Workbuddy来创建钉钉的Souce模板，整个过程通过 Web 向导即可完成，只需填写应用的 AppKey 与 AppSecret。
+为 Authentik 添加钉钉作为第三方登录源（OAuth Source），用户可直接使用钉钉扫码/账号登录。由于钉钉开发者平台没有提供标准的OAuth连接协议，authentik无法使用通用OAuth Source来直接对接钉钉。通过Workbuddy来创建钉钉的Souce模板，管理员可以通过 Web 向导即可完成钉钉的对接，只需填写应用的 AppKey 与 AppSecret。
 
 ## 一、钉钉开放平台侧准备
 
