@@ -21,17 +21,20 @@
     {% endunless %}
   {% endif %}
 {% endfor %}
-<section class="hero"><div class="wrap">
-  <h1>技术<span class="grad">实践</span>笔记</h1>
-  <p class="sub">Authentik SSO、宁盾、Citrix 等企业级身份认证与桌面虚拟化的实战记录</p>
-  <div class="stats">
-    <span class="stat"><b>{{ docs.size }}</b>篇文章</span>
-    <span class="stat"><b>{{ cats.size }}</b>个分类</span>
-    <span class="stat"><b>51</b>张配图</span>
-    <span class="stat">持续更新</span>
+<section class="hero">
+  <div class="bg" style="background-image:url('{{ "/assets/hero.jpg" | relative_url }}')"></div><div class="veil"></div>
+  <div class="wrap">
+    <h1>技术<span class="grad">实践</span>笔记</h1>
+    <p class="sub">Authentik SSO、宁盾、Citrix 等企业级身份认证与桌面虚拟化的实战记录</p>
+    <div class="stats">
+      <span class="stat"><b>{{ docs.size }}</b>篇文章</span>
+      <span class="stat"><b>{{ cats.size }}</b>个分类</span>
+      <span class="stat"><b>51</b>张配图</span>
+      <span class="stat">持续更新</span>
+    </div>
   </div>
-</div></section>
-<div class="filterbar">
+</section>
+<div class="filterbar" id="filterbar">
   <span class="chip on" data-cat="all">全部 ({{ docs.size }})</span>
   {% for c in cats %}
     {% assign cnt = 0 %}
@@ -39,21 +42,29 @@
     <span class="chip" data-cat="{{ c | escape }}">{{ c | escape }} ({{ cnt }})</span>
   {% endfor %}
 </div>
-<section class="grid">
+<section class="list" id="list">
 {% for p in docs %}
   {% assign c = p.categories.first | default: '未分类' %}
   {% assign ex = p.sum %}
   {% if ex == blank %}
     {% assign ex = p.content | strip_html | strip | truncate: 110 %}
   {% endif %}
-  <article class="card" data-cat="{{ c | escape }}">
-    <div class="meta"><span class="badge">{{ c | escape }}</span><time>{{ p.date | date: "%Y-%m-%d" }}</time></div>
-    <h3><a href="{{ p.url | relative_url }}">{{ p.title | escape }}</a></h3>
-    <p class="excerpt">{{ ex | escape }}</p>
-    <div class="tags">{% for t in p.tags limit: 5 %}<span>{{ t | escape }}</span>{% endfor %}</div>
+  <article class="row" data-cat="{{ c | escape }}">
+    <div class="main">
+      <div class="meta"><span class="badge">{{ c | escape }}</span><time>{{ p.date | date: "%Y-%m-%d" }}</time></div>
+      <h3><a href="{{ p.url | relative_url }}">{{ p.title | escape }}</a></h3>
+      <p class="excerpt">{{ ex | escape }}</p>
+      <div class="tags">{% for t in p.tags limit: 5 %}<span>{{ t | escape }}</span>{% endfor %}</div>
+    </div>
+    <div class="side">
+      <time>{{ p.date | date: "%Y-%m-%d" }}</time>
+      <span class="go">→</span>
+    </div>
   </article>
 {% endfor %}
 </section>
+<p class="empty" id="empty">该分类下暂无文章</p>
+<div class="pagerbar" id="pagerbar"></div>
 <footer class="site-footer"><div class="wrap">
   <span>© 2026 cofferwu · 个人技术笔记</span>
   <span>由 OneNote 笔记整理 · WorkBuddy AI 编辑优化</span>
