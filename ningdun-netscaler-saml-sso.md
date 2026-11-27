@@ -123,7 +123,7 @@ add authentication samlAction saml_action_polarsight \
 
 <video poster="attachments/Citrix-ningdun-SSO-poster.jpg" controls preload="metadata" style="width:100%;border-radius:10px;border:1px solid #e6e8eb;" src="attachments/Citrix-ningdun-SSO.mp4"></video>
 
-*Citrix + 宁盾 SSO 登录演示*
+*Citrix + FAS + 宁盾 SSO 登录演示*
 
 ---
 
