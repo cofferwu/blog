@@ -58,10 +58,7 @@ WBvUxA1cAIejPcuNU+6ee/ztLsjvYcaDb9WpE0ciiKTEb/CMwGaneU9H832oxAXOdnOnDKKmEsYD
 BaBMRsYFtc9zzzhVJJ/PgvUbug+ynWfvacuXySgKBvSonR0Al3v7O5dqWGJoqqe9Z8ILFdrF6VpW
 n1kCAwEAATANBgkqhkiG9w0BAQsFAAOCAQEAoU1kFHxLGtxBkdu/QIN76QjNH6GfSf6eCT7jAOBK
 Xs9krPQJM+1/+8+MO3z3KRDavD7zWPDKU3IFmtDIw1zSVlNNsOuKxpN2D5JRBtOtFYJXxujVcFy1
-B39p9DMBmZPTH2jIwqjYuF96fMJyJ7kPudAc5dCDaI3qWggA/5XavEcoCGVZoXeAfQMxWI05cvGh
-Q5iyiBIEeAlpCbk/XfHf3ZPttfOlJjhdnynhuD7SApokcds4czCkUh8hzAL3+ItFpdb1SDuVgfyE
-2vOHHwBexxb0XRzfCGjRkKu5A2ME1YGQHifyKpyRKKFxMObEI1ncT/EzbVUFJkuyCNvx5lWbbg==
------END CERTIFICATE-----
+..........................隐藏真实证书文件......................................
 ```
 
 ## 四、创建 SAML 认证策略
@@ -105,6 +102,9 @@ add authentication samlAction saml_action_polarsight \
 
 ![](images/宁盾与netscaler-saml-SSO-009.png)
 
+配置完成后，用户可以通过宁盾进行身份验证，登录Citrix桌面平台，但是打开桌面时，无法获取用户信息，因此需要输入用户名密码进行登录。
+在环境中部署Citrix FAS 可以解决该问题，做到全线路SSO。
+
 ## 六、排障要点
 
 | 现象 | 检查点 |
@@ -127,4 +127,4 @@ add authentication samlAction saml_action_polarsight \
 
 ---
 
-> 本文由 WorkBuddy AI 编辑整理。
+> 本文由 WorkBuddy AI 编辑整理，本人修改并定稿。
