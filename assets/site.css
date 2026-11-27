@@ -371,3 +371,38 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
   .row { grid-template-columns: minmax(0,1fr); padding: 18px 20px; }
   .row .side { flex-direction: row; align-items: center; }
 }
+
+/* ===== 整块可点击：行改为 a.row ===== */
+a.row {
+  display: grid; grid-template-columns: minmax(0,1fr) auto;
+  gap: 8px 28px; align-items: center;
+  background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+  padding: 20px 26px; color: var(--ink); text-decoration: none;
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+a.row:hover { text-decoration: none; transform: translateY(-2px); box-shadow: var(--shadow); border-color: var(--accent); }
+a.row .main { min-width: 0; }
+a.row .meta { display: flex; align-items: center; gap: 10px; font-size: 12.5px; color: var(--muted); margin-bottom: 6px; }
+a.row h3 { margin: 0; font-size: 18.5px; line-height: 1.45; transition: color .15s ease; }
+a.row:hover h3 { color: var(--accent); }
+a.row .excerpt {
+  margin: 6px 0 0; font-size: 14px; color: var(--muted);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+a.row .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 9px; font-size: 12px; color: #8b949e; }
+a.row .tags span { background: #f0f1f3; border-radius: 6px; padding: 2px 8px; }
+a.row .side {
+  display: flex; flex-direction: column; align-items: flex-end; gap: 8px;
+  color: var(--muted); white-space: nowrap;
+}
+a.row .side time { font-size: 13.5px; font-variant-numeric: tabular-nums; }
+a.row .go {
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 1px solid var(--border); display: grid; place-items: center;
+  color: var(--muted); font-size: 16px; transition: all .18s ease;
+}
+a.row:hover .go { background: var(--accent); border-color: var(--accent); color: #fff; transform: translateX(3px); }
+@media (max-width: 720px) {
+  a.row { grid-template-columns: minmax(0,1fr); padding: 18px 20px; }
+  a.row .side { flex-direction: row; align-items: center; }
+}
