@@ -1,6 +1,6 @@
 ---
 title: "Authentik 飞书 SSO 配置"
-date: 2026-10-26 02:12:58 
+date: 2026-10-26 02:12:58
 categories:
   - 身份与认证
 tags:
