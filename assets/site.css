@@ -284,3 +284,90 @@ span.linenos.special { color: #000000; background-color: #ffffc0; padding-left: 
   font-family: "Cascadia Code", Consolas, "JetBrains Mono", monospace;
 }
 .highlighter-rouge:hover .copy-btn, .highlight:hover .copy-btn { opacity: 1; }
+
+/* ===== 新版 Hero：风景图背景 ===== */
+.hero { position: relative; overflow: hidden; background: #1d3325; }
+.hero .bg {
+  position: absolute; inset: 0;
+  background-position: center 42%; background-size: cover; background-repeat: no-repeat;
+  transform: scale(1.02);
+}
+.hero .veil {
+  position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(10,25,18,.34) 0%, rgba(10,25,18,.62) 100%);
+}
+.hero .wrap {
+  position: relative; z-index: 1; max-width: 1160px; margin: 0 auto;
+  padding: 78px 24px 58px; color: #fff;
+}
+.hero h1 { text-shadow: 0 2px 14px rgba(0,0,0,.35); }
+.hero h1 .grad {
+  background: linear-gradient(90deg, #9be15d, #43cea2);
+  -webkit-background-clip: text; background-clip: text; color: transparent;
+}
+.hero p.sub { color: rgba(255,255,255,.88); text-shadow: 0 1px 8px rgba(0,0,0,.4); }
+.hero .stats { margin-top: 20px; }
+.hero .stat {
+  background: rgba(255,255,255,.14); border: 1px solid rgba(255,255,255,.26);
+  backdrop-filter: blur(6px); color: rgba(255,255,255,.92);
+}
+.hero .stat b { color: #fff; }
+
+/* ===== 新版列表：一行一篇文章 ===== */
+.list {
+  max-width: 1160px; margin: 20px auto 8px; padding: 0 24px;
+  display: flex; flex-direction: column; gap: 14px;
+}
+.row {
+  background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+  padding: 20px 26px; display: grid; grid-template-columns: minmax(0,1fr) auto;
+  gap: 8px 28px; align-items: center;
+  transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+}
+.row:hover { transform: translateY(-2px); box-shadow: var(--shadow); border-color: #d5dce6; }
+.row .main { min-width: 0; }
+.row .meta { display: flex; align-items: center; gap: 10px; font-size: 12.5px; color: var(--muted); margin-bottom: 6px; }
+.row h3 { margin: 0; font-size: 18.5px; line-height: 1.45; }
+.row h3 a { color: var(--ink); }
+.row h3 a:hover { color: var(--accent); text-decoration: none; }
+.row .excerpt {
+  margin: 6px 0 0; font-size: 14px; color: var(--muted);
+  display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden;
+}
+.row .tags { display: flex; gap: 6px; flex-wrap: wrap; margin-top: 9px; font-size: 12px; color: #8b949e; }
+.row .tags span { background: #f0f1f3; border-radius: 6px; padding: 2px 8px; }
+.row .side {
+  display: flex; flex-direction: column; align-items: flex-end; gap: 8px;
+  color: var(--muted); white-space: nowrap;
+}
+.row .side time { font-size: 13.5px; font-variant-numeric: tabular-nums; }
+.row .go {
+  width: 34px; height: 34px; border-radius: 50%;
+  border: 1px solid var(--border); display: grid; place-items: center;
+  color: var(--muted); font-size: 16px; transition: all .18s ease;
+}
+.row:hover .go { background: var(--accent); border-color: var(--accent); color: #fff; }
+
+/* ===== 分页 ===== */
+.pagerbar {
+  max-width: 1160px; margin: 26px auto 56px; padding: 0 24px;
+  display: flex; justify-content: center; align-items: center; gap: 8px; flex-wrap: wrap;
+}
+.pbtn {
+  min-width: 38px; height: 38px; padding: 0 12px;
+  border: 1px solid var(--border); background: var(--card); color: var(--muted);
+  border-radius: 10px; font-size: 14.5px; cursor: pointer; transition: all .15s ease;
+}
+.pbtn:hover:not(:disabled) { border-color: var(--accent); color: var(--accent); }
+.pbtn.on { background: var(--accent); border-color: var(--accent); color: #fff; font-weight: 600; }
+.pbtn:disabled { opacity: .45; cursor: default; }
+.pinfo { font-size: 13.5px; color: var(--muted); margin: 0 10px; }
+
+.empty { max-width: 1160px; margin: 40px auto; text-align: center; color: var(--muted); display: none; }
+
+@media (max-width: 720px) {
+  .hero .wrap { padding: 56px 20px 44px; }
+  .hero h1 { font-size: 30px; }
+  .row { grid-template-columns: minmax(0,1fr); padding: 18px 20px; }
+  .row .side { flex-direction: row; align-items: center; }
+}
