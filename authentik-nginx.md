@@ -1,5 +1,5 @@
 ---
-title: "Authentik + Nginx 流量架构"
+title: "Authentik + Nginx 配置架构"
 date: 2026-11-04 02:51:11 +00:00
 categories:
   - 身份与认证
@@ -9,7 +9,7 @@ tags:
   - HTTPS
   - LDAP
 layout: article
-sum: "本文梳理 authentik 部署中各类流量的走向：HTTPS 认证流量、应用流量、auth_request 鉴权子请求、LDAP 流量以及 Docker 内网回连。明确端口与暴露范围后，才能正确配置 Nginx、com…"
+sum: "本文梳理 authentik 部署中各类流量的走向"
 ---
 
 ## 概述
@@ -43,7 +43,7 @@ server 容器的 9000 端口通过 NAT 映射到宿主机 19000：
 | 序号 | 流量路径 | 宿主机端口 | 容器端口 | 暴露范围 | 说明 |
 | --- | --- | --- | --- | --- | --- |
 | 1 | 浏览器/SSO → Nginx → server | 9443 (Nginx TLS) → 127.0.0.1:19000 | 9000 | 公网 | 认证主入口，导入证书 |
-| 2 | 应用用户 → Nginx → 被保护应用 | 443 (Nginx TLS) | — | 公网 | forward auth 单应用模式，后端 `https://zjtdc.zjtdemo.com` |
+| 2 | 应用用户 → Nginx → 被保护应用 | 443 (Nginx TLS) | — | 公网 | forward auth 单应用模式，后端业务URL |
 | 3 | auth_request 鉴权子请求 | 127.0.0.1:19000 | 9000 | 仅回环 | Nginx 内部完成，用户无感 |
 | 4 | 排障通道 | 127.0.0.1:19443 | 9443 | 仅回环 | 容器自带 TLS，日常不用 |
 | 5 | LDAP 客户端 → LDAP outpost | 389 / 636 | 3389 / 6636 | 内网 | TCP 直连，不经过 Nginx |
