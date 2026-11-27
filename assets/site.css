@@ -533,3 +533,49 @@ a.row:hover .go { background: var(--accent); border-color: var(--accent); color:
   .searchbox { min-width: 140px; }
   .toolbar { flex-direction: column; align-items: flex-start; }
 }
+
+/* ===== 视频懒加载门面 ===== */
+.vid-facade {
+  position: relative; margin: 16px 0; border: 1px solid var(--border);
+  border-radius: 10px; overflow: hidden; cursor: pointer;
+  aspect-ratio: 16 / 9; background: #0b1420;
+  transition: transform .18s ease, box-shadow .18s ease;
+}
+.vid-facade:hover { transform: translateY(-2px); box-shadow: var(--shadow); }
+.vid-facade .cover {
+  position: absolute; inset: 0; overflow: hidden;
+  background: linear-gradient(135deg, #16324f 0%, #0b1420 60%);
+  display: grid; place-items: center;
+}
+.vid-facade .cover img {
+  position: absolute; inset: 0; width: 100%; height: 100%;
+  object-fit: cover; opacity: .92;
+}
+.vid-facade .play {
+  position: relative; z-index: 2; width: 68px; height: 68px; border-radius: 50%;
+  background: rgba(37,99,235,.92); display: grid; place-items: center;
+  box-shadow: 0 4px 24px rgba(37,99,235,.45); transition: transform .18s ease;
+}
+.vid-facade:hover .play { transform: scale(1.1); }
+.vid-facade .play::after {
+  content: ""; display: block; margin-left: 6px;
+  border-style: solid; border-width: 12px 0 12px 20px;
+  border-color: transparent transparent transparent #fff;
+}
+.vid-facade .spinner {
+  display: none; position: relative; z-index: 2;
+  width: 44px; height: 44px; border-radius: 50%;
+  border: 4px solid rgba(255,255,255,.25); border-top-color: #fff;
+  animation: vidspin 0.9s linear infinite;
+}
+.vid-facade.loading .play { display: none; }
+.vid-facade.loading .spinner { display: block; }
+@keyframes vidspin { to { transform: rotate(360deg); } }
+.vid-facade .label {
+  position: absolute; z-index: 2; left: 14px; bottom: 12px;
+  background: rgba(0,0,0,.62); color: #fff; border-radius: 8px;
+  padding: 4px 12px; font-size: 13px; backdrop-filter: blur(4px);
+}
+.vid-facade.playing { cursor: default; aspect-ratio: auto; }
+.vid-facade.playing .cover { display: none; }
+.vid-facade video { display: block; width: 100%; }
