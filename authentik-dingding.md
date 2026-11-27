@@ -55,7 +55,7 @@ docker compose up -d --force-recreate server worker
 | Consumer key | 钉钉 AppKey |
 | Consumer secret | 钉钉 AppSecret |
 
-保存后，authentik 会生成回调 URL；把它回填到钉钉开放平台的重定向 URL 中并确认生效。
+保存后，authentik 会生成回调 URL；把它回填到钉钉开发者平台的重定向 URL 中并确认生效。
 
 
 
