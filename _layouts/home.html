@@ -5,11 +5,20 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>技术博客 · Authentik / 宁盾 / Citrix 技术实践</title>
 <link rel="stylesheet" href="{{ '/assets/site.css' | relative_url }}">
+<script>
+/* 首屏无闪烁：先于渲染恢复主题偏好 */
+(function(){try{var t=localStorage.getItem('theme');if(!t&&window.matchMedia&&matchMedia('(prefers-color-scheme: dark)').matches)t='dark';if(t)document.documentElement.dataset.theme=t;}catch(e){}})();
+</script>
 </head>
 <body>
 <header class="site-header"><div class="wrap">
   <a class="brand" href="{{ '/index.html' | relative_url }}">技术博客<span class="dot">.</span></a>
   <nav><a href="{{ '/index.html' | relative_url }}">首页</a><a href="https://github.com/cofferwu/blog" target="_blank">GitHub</a></nav>
+  <div class="searchbox">
+    <span class="icon">⌕</span>
+    <input id="search" type="search" placeholder="搜索文章：标题 / 摘要 / 标签" autocomplete="off">
+  </div>
+  <button class="theme-toggle" id="themeToggle" title="切换深浅色">☾</button>
 </div></header>
 {% assign docs = site.pages | where_exp: "p", "p.title" | where_exp: "p", "p.date" | sort: "date" | reverse %}
 {% assign cats = "" | split: "|" %}
@@ -34,13 +43,16 @@
     </div>
   </div>
 </section>
-<div class="filterbar" id="filterbar">
-  <span class="chip on" data-cat="all">全部 ({{ docs.size }})</span>
-  {% for c in cats %}
-    {% assign cnt = 0 %}
-    {% for p in docs %}{% if p.categories.first == c %}{% assign cnt = cnt | plus: 1 %}{% endif %}{% endfor %}
-    <span class="chip" data-cat="{{ c | escape }}">{{ c | escape }} ({{ cnt }})</span>
-  {% endfor %}
+<div class="toolbar">
+  <div class="filterbar" id="filterbar">
+    <span class="chip on" data-cat="all">全部 ({{ docs.size }})</span>
+    {% for c in cats %}
+      {% assign cnt = 0 %}
+      {% for p in docs %}{% if p.categories.first == c %}{% assign cnt = cnt | plus: 1 %}{% endif %}{% endfor %}
+      <span class="chip" data-cat="{{ c | escape }}">{{ c | escape }} ({{ cnt }})</span>
+    {% endfor %}
+  </div>
+  <span class="result-hint" id="resultHint"></span>
 </div>
 <section class="list" id="list">
 {% for p in docs %}
@@ -49,7 +61,7 @@
   {% if ex == blank %}
     {% assign ex = p.content | strip_html | strip | truncate: 110 %}
   {% endif %}
-  <a class="row" href="{{ p.url | relative_url }}" data-cat="{{ c | escape }}">
+  <a class="row" href="{{ p.url | relative_url }}" data-cat="{{ c | escape }}" data-date="{{ p.date | date: '%Y-%m-%d' }}" data-tags="{{ p.tags | join: ',' | escape }}">
     <div class="main">
       <div class="meta"><span class="badge">{{ c | escape }}</span><time>{{ p.date | date: "%Y-%m-%d" }}</time></div>
       <h3>{{ p.title | escape }}</h3>
@@ -63,7 +75,7 @@
   </a>
 {% endfor %}
 </section>
-<p class="empty" id="empty">该分类下暂无文章</p>
+<p class="empty" id="empty">没有找到匹配的文章，试试其他关键词</p>
 <div class="pagerbar" id="pagerbar"></div>
 <footer class="site-footer"><div class="wrap">
   <span>© 2026 cofferwu · 个人技术笔记</span>
