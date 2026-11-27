@@ -98,10 +98,6 @@ add authentication samlAction saml_action_polarsight \
 
 ![](images/宁盾与netscaler-saml-SSO-008.png)
 
-配置完成后效果如下：
-
-![](images/宁盾与netscaler-saml-SSO-009.png)
-
 配置完成后，用户可以通过宁盾进行身份验证，登录Citrix桌面平台，但是打开桌面时，无法获取用户信息，因此需要输入用户名密码进行登录。
 在环境中部署Citrix FAS 可以解决该问题，做到全线路SSO。
 
