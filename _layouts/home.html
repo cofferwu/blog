@@ -49,10 +49,10 @@
   {% if ex == blank %}
     {% assign ex = p.content | strip_html | strip | truncate: 110 %}
   {% endif %}
-  <article class="row" data-cat="{{ c | escape }}">
+  <a class="row" href="{{ p.url | relative_url }}" data-cat="{{ c | escape }}">
     <div class="main">
       <div class="meta"><span class="badge">{{ c | escape }}</span><time>{{ p.date | date: "%Y-%m-%d" }}</time></div>
-      <h3><a href="{{ p.url | relative_url }}">{{ p.title | escape }}</a></h3>
+      <h3>{{ p.title | escape }}</h3>
       <p class="excerpt">{{ ex | escape }}</p>
       <div class="tags">{% for t in p.tags limit: 5 %}<span>{{ t | escape }}</span>{% endfor %}</div>
     </div>
@@ -60,7 +60,7 @@
       <time>{{ p.date | date: "%Y-%m-%d" }}</time>
       <span class="go">→</span>
     </div>
-  </article>
+  </a>
 {% endfor %}
 </section>
 <p class="empty" id="empty">该分类下暂无文章</p>
