@@ -9,7 +9,7 @@ tags:
   - 瘦客户端
   - 注册表
 layout: article
-sum: "Dell Wyse 瘦客户端在使用 Citrix Receiver / Desktop Viewer 时，默认会弹出商店配置框、加载项提示、锁定桌面等，影响自助终端或公用桌面的使用体验。本文用一组批处理命令做统一优化，并…"
+sum: "Dell Wyse 瘦客户端在使用 Citrix Receiver / Desktop Viewer 时，默认会弹出商店配置框、加载项提示、锁定桌面等，影响自助终端或公用桌面的使用体验。本文用一组批处理命令做统一优化"
 ---
 
 ## 概述
@@ -102,7 +102,7 @@ REG DELETE "HKLM\SOFTWARE\WOW6432Node\Citrix\Dazzle" /v AllowAddStore /f
 & reg delete HKU\ZZZ\Software\Microsoft\Windows\CurrentVersion\Policies\System /v DisableLockWorkstation /f
 & reg unload HKU\ZZZ
 ```
+以上所有脚本都需要通过Wyse管理控制台推送运行。
 
----
 
 > 本文由 WorkBuddy AI 编辑整理。
