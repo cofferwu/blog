@@ -81,7 +81,7 @@ Flows and Stages → Flows → default-authentication-flow
 
 ## 附件下载
 
-- [wemcomdingding.zip](attachments/wemcomdingding.zip) — 本文配套部署包，含钉钉/企业微信集成脚本（dingtalk.py、wecom.py、deploy.sh、diagnose_dingtalk.py 等）
+- [wecomdingding.zip](attachments/wecomdingding.zip) — 本文配套部署包，含钉钉/企业微信集成脚本（dingtalk.py、wecom.py、deploy.sh、diagnose_dingtalk.py 等）
 
 ---
 
