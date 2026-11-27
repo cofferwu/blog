@@ -27,8 +27,7 @@ cd ~/.docker/compose/authentik
 导出数据库（service 名是 `postgresql`）：
 
 ```bash
-docker compose exec -T postgresql \
-  pg_dump -U authentik -d authentik | gzip > authentik-$(date +%F).sql.gz
+docker compose exec -T postgresql   pg_dump -U authentik -d authentik | gzip > authentik-$(date +%F).sql.gz
 ```
 
 备份配置三件套。**密钥一旦丢失，所有会话和加密数据都会报废**，因此 `.env` 与 `data/` 必须一并备份：
