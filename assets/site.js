@@ -176,6 +176,54 @@ if (dataEl && post) {
   }
 }
 
+// ===== 视频懒加载门面（facade）：打开页面不拉流，点击封面才加载播放 =====
+document.querySelectorAll('.post video').forEach(function (v) {
+  var wrap = document.createElement('div');
+  wrap.className = 'vid-facade';
+  var cover = document.createElement('div');
+  cover.className = 'cover';
+  if (v.poster) {
+    var img = document.createElement('img');
+    img.src = v.poster;
+    img.alt = '视频封面';
+    img.loading = 'lazy';
+    cover.appendChild(img);
+  }
+  var play = document.createElement('div');
+  play.className = 'play';
+  var spinner = document.createElement('div');
+  spinner.className = 'spinner';
+  var label = document.createElement('span');
+  label.className = 'label';
+  label.textContent = '▶ 点击播放视频';
+  cover.appendChild(play);
+  cover.appendChild(spinner);
+  cover.appendChild(label);
+  v.style.display = 'none';
+  v.removeAttribute('controls');      // 门面期隐藏控制条
+  v.parentNode.insertBefore(wrap, v);
+  wrap.appendChild(cover);
+  wrap.appendChild(v);
+  var started = false;
+  wrap.addEventListener('click', function () {
+    if (started) return;
+    started = true;
+    wrap.classList.add('loading');    // 显示加载动画
+    v.controls = true;
+    v.style.display = '';
+    v.load();                          // 此时才开始拉流
+    var onReady = function () {
+      wrap.classList.add('playing');  // 隐藏门面
+      v.play().catch(function () {});
+    };
+    v.addEventListener('canplay', onReady, { once: true });
+    // 兜底：8 秒仍未 canplay 则直接显示播放器（可能已缓冲一部分）
+    setTimeout(function () {
+      if (!wrap.classList.contains('playing')) wrap.classList.add('playing');
+    }, 8000);
+  });
+});
+
 // ===== 文章页：代码复制 =====
 document.querySelectorAll('.post pre').forEach(function (pre) {
   var wrap = pre.closest('.codehilite, .highlighter-rouge, .highlight') || pre.parentElement;
@@ -196,6 +244,7 @@ lb.id = 'lightbox';
 document.body.appendChild(lb);
 lb.addEventListener('click', function () { lb.style.display = 'none'; });
 document.querySelectorAll('.post img').forEach(function (img) {
+  if (img.closest('.vid-facade')) return;   // 视频门面封面不进灯箱
   img.addEventListener('click', function () {
     lb.innerHTML = ''; var big = document.createElement('img');
     big.src = img.src; lb.appendChild(big); lb.style.display = 'flex';
