@@ -29,9 +29,10 @@ DNS 侧把 `app.zjtdemo.cloud` 解析到 authentik/Nginx 所在主机 `192.168.3
 
 ![](images/Authentik-forword-auth-002.png)
 
-![](images/Authentik-forword-auth-003.png)
+此外还可以启用发送Http-basic认证方式，直接登录后台基于http-basic认证的业务系统
 
-![](images/Authentik-forword-auth-004.png)
+![](images/Authentik-forword-auth-003.png)
+用户属性中需要创建这两个属性，并给予登录后台业务的账号密码。
 
 ## 二、把应用加入 Outpost
 
@@ -148,9 +149,9 @@ server {
 
 应用配置后执行 `sudo nginx -t && sudo systemctl reload nginx` 使其生效。
 
-## 四、排障：验证身份头是否传到后端
+## 四、排障：HTTP-Basic验证身份头是否传到后端
 
-在 IIS 后端根目录（默认 `C:\inetpub\wwwroot`）新建 `test.aspx`，用于打印收到的所有请求头：
+本文是以IIS站点为例，在 IIS 后端根目录（默认 `C:\inetpub\wwwroot`）新建 `test.aspx`，用于打印收到的所有请求头：
 
 ```aspx
 <%@ Page Language="C#" %>
@@ -189,10 +190,10 @@ curl.exe -v -k -b "authentik_proxy_0d98d05c=..." https://app.zjtdemo.cloud/test.
 
 ## 演示视频
 
-<video controls preload="metadata" poster="attachments/authentik-singleapp-poster.jpg" style="width:100%;border-radius:10px;border:1px solid #e6e8eb;" src="attachments/authentik-singleapp.mp4"></video></video>
+<video poster="attachments/authentik-singleapp-poster.jpg" controls preload="metadata" style="width:100%;border-radius:10px;border:1px solid #e6e8eb;" src="attachments/authentik-singleapp.mp4"></video>
 
 *单应用 Forward Auth 登录流程演示*
 
 ---
 
-> 本文由 WorkBuddy AI 编辑整理。
+> 本文由 WorkBuddy AI 编辑整理，本人修改并定稿。
